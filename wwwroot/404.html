@@ -14,7 +14,7 @@
         // Since any other server will allow the Blazor SPA to boot up before redirecting.
         //
         var redirectTo = "/FinancesApp";
-        var targetPath = window.location.pathname.replace("/FinancesApp", "");
+        var targetPath = window.location.pathname;
 
         localStorage.setItem("githubTargetPage", targetPath);
         window.location.href = "/FinancesApp";

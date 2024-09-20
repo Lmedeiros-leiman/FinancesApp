@@ -10,3 +10,18 @@
         </LayoutView>
     </NotFound>
 </Router>
+
+@code {
+    @inject IJSRuntime JSRuntime
+    @inject NavigationManager NavigationManager
+    // adds the 404 redirect. Github is fun.
+
+    protected override void OnInitialized() {
+        
+        string? targetPage = (string?)JSRuntime.InvokeAsync<string?>("localStorage.getItem", "targetPage").Result;
+
+        if ( string.IsNullOrEmpty(targetPage) ) { return; }
+        NavigationManager.NavigateTo( targetPage ,false);
+    }
+
+}
