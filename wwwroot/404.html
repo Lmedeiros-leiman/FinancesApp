@@ -11,7 +11,7 @@
         var redirectToQuery = window.location.search;
         alert(redirectTo)
         if (redirectTo !== "/") {
-            window.location.href = redirectToQuery;
+            window.location.href = "/" + redirectToQuery.split("/")[0];
         }
     </script>
     <h1>Ops!</h1>
