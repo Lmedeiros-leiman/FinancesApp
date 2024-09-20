@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        var redirectTo = window.location.pathname;
+        var redirectToQuery = window.location.search;
+
+        if (redirectTo !== "/") {
+            window.location.href = "/" + "#" + redirectTo + redirectToQuery;
+        }
+    </script>
+    <h1>Ops!</h1>
+    <header>
+        Something really wrong just happened, this is not supposed to be visible.
+    </header>
+    <div>
+        <a href="/">Go Home</a>
+    </div>
+</body>
+</html>
