@@ -16,12 +16,12 @@
     @inject NavigationManager NavigationManager
     // adds the 404 redirect. Github is fun.
 
-    protected override void OnInitialized() {
+    protected override async Task OnInitializedAsync() {
         
-        string? targetPage = (string?)JSRuntime.InvokeAsync<string?>("localStorage.getItem", "targetPage").Result;
+        string? targetPage = await  JSRuntime.InvokeAsync<string?>("localStorage.getItem", "githubTargetPage");
 
         if ( string.IsNullOrEmpty(targetPage) ) { return; }
-        NavigationManager.NavigateTo( targetPage ,false);
+        NavigationManager.NavigateTo( targetPage, false);
     }
 
 }
