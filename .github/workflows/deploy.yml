@@ -3,7 +3,7 @@ name: Deploy to Pages
 
 on:
   push:
-    branchs: ["main"]
+    branches: ["main"]
 
   workflow_dispatch:
   
@@ -41,13 +41,15 @@ jobs:
         run: dotnet build -c Release --no-restore
 
       - name: Publish
-        run: dotnet publish FinancesApp.csproj -c:Release -o docs --no-logo
+        run: dotnet publish FinancesApp.csproj -c:Release -o docs --nologo
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
       - name: Upload
         uses: actions/upload-pages-artifact@v3
+        with:
+          path: 'docs/wwwroot'
       
       - name: Deploy
         id: deployment
