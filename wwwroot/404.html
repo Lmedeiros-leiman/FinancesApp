@@ -9,9 +9,9 @@
     <script>
         var redirectTo = window.location.pathname;
         var redirectToQuery = window.location.search;
-        alert(redirectTo)
+        
         if (redirectTo !== "/") {
-            window.location.href = "/" + redirectToQuery.split("/")[0];
+            window.location.href = "/" + redirectToQuery.split("/")[1];
         }
     </script>
     <h1>Ops!</h1>
