@@ -1,0 +1,40 @@
+@inject ModalService ModalService
+
+<Button @onclick="ShowModal" Class="d-flex p-0 rounded-circle">
+   <Icon Name="IconName.PlusLg" Color="IconColor.Success" Class="rounded-circle bg-success-subtle px-3 p-3" />
+</Button>
+
+<Modal @ref="InputModal" title="Adding a new item" >
+   
+   <BodyTemplate>
+      <EditForm Model="Input"  OnValidSubmit="ConfirmInput" FormName="InputElement">
+
+
+         <Button Type="ButtonType.Reset" role="button">Cancel</Button>
+         <Button>Confirm</Button>
+      </EditForm>
+   </BodyTemplate>
+</Modal>
+
+
+@code {
+   Modal InputModal = default!;
+   InputModel Input = new();
+
+   private async Task ShowModal() {
+      await InputModal.ShowAsync();
+   }
+   private async Task CloseModal() {
+      await InputModal.ShowAsync();
+   }
+   private async Task CancelInput() {
+      await InputModal.ShowAsync();
+   }
+   private async Task ConfirmInput() {
+      await InputModal.ShowAsync();
+   }
+
+   private sealed class InputModel {
+      public string data {get; set;} = "";
+   }
+}
