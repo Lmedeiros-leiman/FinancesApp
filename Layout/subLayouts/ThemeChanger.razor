@@ -1,10 +1,12 @@
 @inherits LayoutComponentBase
 
-
-<Button Outline Color="@( globalUserData?.CurrentTheme != "light" ? ButtonColor.Light : ButtonColor.Dark)"
+<div class="d-inline">
+    <Button Outline Color="@( globalUserData?.CurrentTheme != "light" ? ButtonColor.Light : ButtonColor.Dark)"
     @onclick="globalUserData!.TogleTheme">
     <Icon Name="@(globalUserData?.CurrentTheme == "light" ? IconName.Lightbulb : IconName.LightbulbOff)" /> Toggle Theme
 </Button>
+</div>
+
 
 @code {
     [CascadingParameter]

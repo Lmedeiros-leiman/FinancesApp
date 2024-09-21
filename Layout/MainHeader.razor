@@ -1,6 +1,16 @@
 
+<aside class="m-2 p-2 shadow rounded-2 text-bg-@(globalUserData.CurrentTheme) bg-@(globalUserData.CurrentTheme) border border-success d-flex justify-content-between align-content-center align-items-center">
+            <div>
+               <AddTransaction/>
+            </div>
 
-<aside class="m-2 p-2 shadow rounded-2 bg-light ">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-            <ThemeChanger/>
+            <div>
+               <ThemeChanger/>
+            </div>
 </aside>
+
+
+@code {
+   [CascadingParameter]
+   GlobalUserData globalUserData {get; set;} = default!;
+}
