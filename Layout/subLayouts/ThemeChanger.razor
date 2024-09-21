@@ -1,17 +1,13 @@
 @inherits LayoutComponentBase
 
 
-
-<h1>@(globalUserData?.CurrentTheme)</h1>
-
-<Button Color="ButtonColor.Primary" @onclick="ToggleTheme" >Toggle Theme</Button>
+<Button Outline Color="@( globalUserData?.CurrentTheme != "light" ? ButtonColor.Light : ButtonColor.Dark)"
+    @onclick="globalUserData!.TogleTheme">
+    <Icon Name="@(globalUserData?.CurrentTheme == "light" ? IconName.Lightbulb : IconName.LightbulbOff)" /> Toggle Theme
+</Button>
 
 @code {
     [CascadingParameter]
-    GlobalUserData? globalUserData { get; set; }
+    GlobalUserData globalUserData { get; set; } = default!;
 
-    private void ToggleTheme()
-    {
-        globalUserData?.TogleTheme();
-    }
 }
