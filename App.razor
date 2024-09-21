@@ -18,9 +18,12 @@
 
     protected override async Task OnInitializedAsync() {
         
-        string? targetPage = await  JSRuntime.InvokeAsync<string?>("localStorage.getItem", "githubTargetPage");
+        string? targetPage = await JSRuntime.InvokeAsync<string?>("localStorage.getItem", "githubTargetPage");
 
         if ( string.IsNullOrEmpty(targetPage) ) { return; }
+        
+        // removes it from localstorage and adds it to the router.
+        await JSRuntime.InvokeAsync<string?>("localStorage.removeItem", "githubTargetPage");
         NavigationManager.NavigateTo( targetPage, false);
     }
 
