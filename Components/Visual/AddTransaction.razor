@@ -8,7 +8,12 @@
    
    <BodyTemplate>
       <EditForm Model="Input"  OnValidSubmit="ConfirmInput" FormName="InputElement">
-
+         
+         <CurrencyInput TValue="int" @bind-Value="Input.Ammount"  CurrencySign="$" AllowNegativeNumbers  />
+         title
+         category
+         ammount
+         dateTime (default to now)
 
          <Button Type="ButtonType.Reset" role="button">Cancel</Button>
          <Button  Type="ButtonType.Submit">Confirm</Button>
@@ -36,5 +41,6 @@
 
    private sealed class InputModel {
       public string data {get; set;} = "";
+      public int Ammount {get; set;}
    }
 }
