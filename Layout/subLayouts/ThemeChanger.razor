@@ -1,12 +1,20 @@
 @inherits LayoutComponentBase
 
-<div class="d-inline">
-    <Button Outline Color="@( globalUserData?.CurrentTheme != "light" ? ButtonColor.Light : ButtonColor.Dark)"
-    @onclick="globalUserData!.TogleTheme">
-    <Icon Name="@(globalUserData?.CurrentTheme == "light" ? IconName.Lightbulb : IconName.LightbulbOff)" /> Toggle Theme
-</Button>
-</div>
 
+<Dropdown Color=@(globalUserData?.CurrentTheme == "light" ? DropdownColor.Light : DropdownColor.Dark) >
+    <DropdownToggleButton>
+        <Icon Name=@(globalUserData?.CurrentTheme == "light" ? IconName.SunFill : IconName.MoonFill ) />
+        @(globalUserData?.CurrentTheme.Substring(0, 1).ToUpper() + globalUserData?.CurrentTheme.Substring(1)) mode
+    </DropdownToggleButton>
+
+    <DropdownMenu>
+        @if (globalUserData != null ) {
+            <DropdownItem @onclick="globalUserData.SetThemeLight" > <Icon Name="IconName.SunFill" /> Light Mode</DropdownItem>
+            <DropdownItem @onclick="globalUserData.SetThemeDark" > <Icon Name="IconName.MoonFill" /> Dark Mode</DropdownItem>
+        }
+    </DropdownMenu>
+    
+</Dropdown>
 
 @code {
     [CascadingParameter]
