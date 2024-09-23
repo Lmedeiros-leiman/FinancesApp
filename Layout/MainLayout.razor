@@ -1,7 +1,7 @@
 ﻿@inherits LayoutComponentBase
 @using FinancesApp.Components.Logic;
 
-<div class="bb-page bg-@(globalUserData.CurrentTheme)">
+<div class="bb-page text-bg-@(globalUserData.CurrentTheme) bg-@(globalUserData.CurrentTheme)">
         <Sidebar 
             Class="@($"text-bg-{globalUserData?.CurrentTheme} bg-{globalUserData?.CurrentTheme} ")"
             @ref="sidebar" 

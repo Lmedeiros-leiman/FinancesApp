@@ -23,7 +23,12 @@ namespace FinancesApp.Components.Logic
             set { _currentTheme = value; OnPropertyChanged(); }  
         }
 
-        
+        public void SetThemeDark() {
+            CurrentTheme = "dark";
+        }
+        public void SetThemeLight() {
+            CurrentTheme = "light";
+        }
 
         public void TogleTheme() {
             CurrentTheme = CurrentTheme == "light" ? "dark" : "light";
