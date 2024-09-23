@@ -1,46 +1,75 @@
 @inject ModalService ModalService
 
-<Button @onclick="ShowModal" Class="d-flex p-0 rounded-circle">
-   <Icon Name="IconName.PlusLg" Color="IconColor.Success" Class="rounded-circle bg-success-subtle px-3 p-3" />
-</Button>
+<section data-bs-theme="@(GlobalUserData?.CurrentTheme)">
+   <Button @onclick="() => Task.Run(async () => await InputModal.ShowAsync() )" Class="d-flex p-0 rounded-circle">
+      <Icon Name="IconName.PlusLg" Color="IconColor.Light" Class="rounded-circle bg-success px-3 p-3" />
+   </Button>
+</section>
 
-<Modal @ref="InputModal" title="Adding a new item" >
-   
+<Modal OnHiding="CancelInput" @ref="InputModal" BodyCssClass="@($"bg-{GlobalUserData?.CurrentTheme} text-bg-{GlobalUserData?.CurrentTheme} rounded")"
+   HeaderCssClass="@($"bg-{GlobalUserData?.CurrentTheme} text-bg-{GlobalUserData?.CurrentTheme}")"
+   title="Adding a new item">
    <BodyTemplate>
-      <EditForm Model="Input"  OnValidSubmit="ConfirmInput" FormName="InputElement">
-         
-         <CurrencyInput TValue="int" @bind-Value="Input.Ammount"  CurrencySign="$" AllowNegativeNumbers  />
-         title
-         category
-         ammount
-         dateTime (default to now)
+      <EditForm Model="Input" OnValidSubmit="ConfirmInput" FormName="InputElement">
+         <section class="d-flex mb-2 gap-1">
+            <div class="form-floating flex-grow-1">
+               <InputText data-bs-theme="@(GlobalUserData?.CurrentTheme)" class="form-control " placeholder="Title"
+                  id="floatingTitle" @bind-Value="Input.Title" />
+               <label for="floatingTitle" data-bs-theme="@(GlobalUserData?.CurrentTheme)"
+                  class="form-label">Title</label>
+            </div>
 
-         <Button Type="ButtonType.Reset" role="button">Cancel</Button>
-         <Button  Type="ButtonType.Submit">Confirm</Button>
+            <div class="form-floating">
+               <InputSelect id="floatingSelectCategory" data-bs-theme="@(GlobalUserData?.CurrentTheme)"
+                  class="form-select" aria-label="Floating category select" @bind-Value="Input.Category">
+                  <option selected> - </option>
+                  <option value="income">Income</option>
+                  <option value="expenses">Expenses</option>
+               </InputSelect>
+               <label data-bs-theme="@(GlobalUserData?.CurrentTheme)" for="floatingSelectCategory">Category</label>
+            </div>
+         </section>
+
+         <section class="mb-2 form-floating">
+            <CurrencyInput data-bs-theme="@(GlobalUserData?.CurrentTheme)" class="form-control" id="AmmountInput"
+               TValue="int" @bind-Value="Input.Ammount" AllowNegativeNumbers />
+            <label data-bs-theme="@(GlobalUserData?.CurrentTheme)" class="form-label" for="AmmountInput">Ammount</label>
+         </section>
+
+         <section data-bs-theme="@(GlobalUserData?.CurrentTheme)" class="form-control d-flex gap-1">
+            <DateInput data-bs-theme="@(GlobalUserData?.CurrentTheme)" class="w-auto" @bind-Value="Input.Date" />
+            <TimeInput data-bs-theme="@(GlobalUserData?.CurrentTheme)" class="w-auto" @bind-Value="Input.Time" />
+
+            <div class="ms-auto">
+            <Button Type="ButtonType.Submit" Color="ButtonColor.Primary">Confirm</Button>
+            </div>
+         </section>
+
+
+
+
+
       </EditForm>
    </BodyTemplate>
 </Modal>
 
 
 @code {
+   [CascadingParameter]
+   public GlobalUserData GlobalUserData { get; set; } = default!;
    Modal InputModal = default!;
-   InputModel Input = new();
+   Transaction Input = new();
 
-   private async Task ShowModal() {
-      await InputModal.ShowAsync();
+   private async Task CancelInput()
+   {
+      Input = new();
+      await InputModal.HideAsync();
    }
-   private async Task CloseModal() {
-      await InputModal.ShowAsync();
-   }
-   private async Task CancelInput() {
-      await InputModal.ShowAsync();
-   }
-   private async Task ConfirmInput() {
-      await InputModal.ShowAsync();
+   private async Task ConfirmInput()
+   {
+      Console.WriteLine("OK. Sending form...");
+
    }
 
-   private sealed class InputModel {
-      public string data {get; set;} = "";
-      public int Ammount {get; set;}
-   }
+
 }
