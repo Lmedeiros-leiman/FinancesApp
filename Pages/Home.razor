@@ -2,8 +2,8 @@
 
 <PageTitle>Dashboard</PageTitle>
 
-<main class="text-bg-@(globalUserData.CurrentTheme) bg-transparent">
-    @(globalUserData?.CurrentTheme)
+<main data-bs-theme="@(globalUserData.UserStyle.CurrentTheme.ToString() )" >
+    @(globalUserData?.UserStyle.CurrentTheme)
 </main>
 
 @code {

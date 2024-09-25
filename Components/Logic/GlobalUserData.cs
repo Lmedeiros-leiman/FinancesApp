@@ -5,36 +5,33 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
+
+using FinancesApp.Models;
+
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 
-namespace FinancesApp.Components.Logic
-{
-    public enum AvailableThemes {
-        light,
-        dark
-    }
-    public class GlobalUserData : INotifyPropertyChanged
-    {
+namespace FinancesApp.Components.Logic {
+    public class GlobalUserData : INotifyPropertyChanged {
         public event PropertyChangedEventHandler? PropertyChanged;
-
-        private string _currentTheme = AvailableThemes.light.ToString();
-        public string CurrentTheme { 
-            get => _currentTheme; 
-            set { _currentTheme = value; OnPropertyChanged(); }  
+        public GlobalUserData(StorageHandler storageHandler) {
+            UserStyle = new(storageHandler);
+            UserStyle.PropertyChanged += (sender, args) => OnPropertyChanged(args.PropertyName);
+            
+            //
+            UserTransactions = new(storageHandler);
+            
         }
-
-        public void SetThemeDark() {
-            CurrentTheme = "dark";
-        }
-        public void SetThemeLight() {
-            CurrentTheme = "light";
-        }
-
-        public void TogleTheme() {
-            CurrentTheme = CurrentTheme == "light" ? "dark" : "light";
-        }
-
-
+        
+        //
+        // Defines the user visible theme.
+        public UserStyle UserStyle {get; set;}
+        //
+        // Defines the user transactions.
+        public UserTransactions UserTransactions {get; set;}
+        
+        
+        
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = default) => PropertyChanged?.Invoke(this, new(propertyName));
     }
 }
