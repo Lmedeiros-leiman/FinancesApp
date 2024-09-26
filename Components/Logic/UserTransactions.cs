@@ -7,10 +7,38 @@ using System.Threading.Tasks;
 
 using FinancesApp.Models;
 
+using TG.Blazor.IndexedDB;
+
+namespace FinancesApp.Models {
+    public class Transaction {
+        public string Title {get; set;} = "";
+        public int Ammount {get; set;}
+        public string Category {get; set;} = "";
+        public DateOnly Date {get; set;} = DateOnly.FromDateTime(DateTime.Now);
+        public TimeOnly Time {get; set;} = TimeOnly.FromDateTime(DateTime.Now);
+    }
+}
+
 namespace FinancesApp.Components.Logic {
-    public class UserTransactions(StorageHandler storageHandler) : INotifyPropertyChanged {
+    public class UserTransactions : INotifyPropertyChanged {
         public event PropertyChangedEventHandler? PropertyChanged;
-        public ICollection<Transaction> Transactions {get; set;} = [];
+        private readonly StorageHandler _storageHandler;
+        public UserTransactions(StorageHandler storageHandler ) {
+
+            _storageHandler = storageHandler;
+            Transactions = [];
+        }
+        //
+        //
+        public ICollection<Transaction> Transactions {get; set;}
+
+        public void AddTransaction(Transaction newTransaction) { 
+            Transactions.Add(newTransaction);
+            // saves to the database.
+            
+
+            OnPropertyChanged(nameof(Transactions));
+        }
         
         /*
         public void AddTransactionToList(Transaction newTransaction) {
@@ -29,6 +57,6 @@ namespace FinancesApp.Components.Logic {
         */
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = default) {
             PropertyChanged?.Invoke(this, new(propertyName));
-        } 
+        }
     }
 }

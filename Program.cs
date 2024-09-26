@@ -22,7 +22,7 @@ builder.Services.AddIndexedDB(dbstore => {
     dbstore.Version = 1;
 
     dbstore.Stores.Add(new() {
-        Name = "Transactions",
+        Name = DatabaseTables.Transactions.ToString(),
         PrimaryKey = new IndexSpec { Name = "id", KeyPath = "id", Auto = true },
         Indexes = [
             new() {Name="Title", KeyPath="title", Auto=false},
@@ -34,9 +34,8 @@ builder.Services.AddIndexedDB(dbstore => {
     });
 });
 
-
-builder.Services.AddScoped<StorageHandler>(s => new StorageHandler(s.GetService<IJSRuntime>()! ) );
-builder.Services.AddCascadingValue(s => CascadingValueSource.CreateNotifying<GlobalUserData>( new GlobalUserData( s.GetService<StorageHandler>()! )) );
+builder.Services.AddScoped<StorageHandler>(s => new StorageHandler(s.GetService<IJSRuntime>()! ,s.GetService<IndexedDBManager>()! ) );
+builder.Services.AddCascadingValue(s => CascadingValueSource.CreateNotifying<GlobalUserData>( new GlobalUserData( s.GetService<StorageHandler>()! )));
 
 
 

@@ -5,6 +5,8 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
+using TG.Blazor.IndexedDB;
+
 namespace FinancesApp.Components.Logic
 {
     public enum ValidThemes {
@@ -31,7 +33,7 @@ namespace FinancesApp.Components.Logic
             if (theme == CurrentTheme) return;
             CurrentTheme = theme;
             // saves to localstorage.
-            Task.Run(async () => await _storageHandler.setLocalStorage("theme", theme));
+            Task.Run(async () => await _storageHandler.SetLocalStorage("theme", theme));
             // notifies the app about the change.
             OnPropertyChanged(nameof(CurrentTheme));
         }
@@ -39,6 +41,6 @@ namespace FinancesApp.Components.Logic
 
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = default) {
             PropertyChanged?.Invoke(this, new(propertyName));
-        } 
+        }
     }
 }

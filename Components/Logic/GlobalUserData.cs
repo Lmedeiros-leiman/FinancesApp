@@ -11,6 +11,8 @@ using FinancesApp.Models;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
+using TG.Blazor.IndexedDB;
+
 namespace FinancesApp.Components.Logic {
     public class GlobalUserData : INotifyPropertyChanged {
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -20,7 +22,7 @@ namespace FinancesApp.Components.Logic {
             
             //
             UserTransactions = new(storageHandler);
-            
+            UserTransactions.PropertyChanged += (sender, args) => OnPropertyChanged(args.PropertyName);
         }
         
         //
