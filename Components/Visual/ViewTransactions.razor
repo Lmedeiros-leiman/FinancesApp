@@ -1,0 +1,54 @@
+@inherits ComponentBase
+@using System.Text.Json
+
+<table class="table">
+   <thead>
+      <tr>
+         
+      </tr>
+   </thead>
+   <tbody>
+
+@foreach( Transaction transaction in globalUserData.UserTransactions.Transactions ) {
+   
+   <tr>
+         <th class="">@(transaction.Title)</th>
+         <td>@(transaction.Ammount)</td>
+         
+         <td class="d-flex gap-1 justify-content-end">
+            <aside class="d-flex bg-secondary-subtle rounded-4 p-1 px-2">
+               @transaction.Category
+            </aside>
+            <footer class="bg-primary-subtle text-bg-primary rounded-4 w-auto p-1">
+               <span>
+                  @if (DateOnly.FromDateTime(DateTime.Now).Year != transaction.Date.Year ) {
+                     @transaction.Date.ToString("dd/MM/yyyy")
+                  } else {
+                     @transaction.Date.ToString( DateOnly.FromDateTime(DateTime.Now).Month != transaction.Date.Month ? "dd/MM" : "dd/MMM" ) 
+                  }
+               </span>
+               <span>
+                  @(transaction.Time)
+               </span>
+            </footer>
+         </td>
+   </tr>
+
+   
+   <section class="d-flex w-100 justify-content-between gap-2 p-1 px-2 border border-success-subtle shadow shadow-sm rounded-2 align-items-center flex-grow-1 ">
+      <header class="fw-bold text-success">@(transaction.Title)</header>
+      <section>@(transaction.Ammount)</section>
+      <aside>@(transaction.Category)</aside>
+      
+   </section>
+   
+   
+   }
+   </tbody>
+</table>
+
+@code {
+   [CascadingParameter]
+   GlobalUserData globalUserData {get; set;} = default!;
+   string a = DateTime.Now.ToString("D/M");
+}

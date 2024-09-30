@@ -2,9 +2,11 @@
 
 <PageTitle>Dashboard</PageTitle>
 
-<main data-bs-theme="@(globalUserData.UserStyle.CurrentTheme.ToString() )" >
-    @(globalUserData?.UserStyle.CurrentTheme)
+<main data-bs-theme="@(globalUserData.UserStyle.CurrentTheme )" >
+    <ViewTransactions />
 </main>
+
+
 
 @code {
     [CascadingParameter]

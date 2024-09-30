@@ -1,4 +1,5 @@
 @inject ModalService ModalService
+@using System.Text.Json
 
 <section data-bs-theme="@(GlobalUserData?.UserStyle.CurrentTheme)">
    <Button @onclick="() => Task.Run(async () => await InputModal.ShowAsync() )" Class="d-flex p-0 rounded-circle">
@@ -70,6 +71,7 @@
    private void ConfirmInput(EditContext context) {
       Console.WriteLine("Adding new transaction to list. | " + DateTime.Now);
 
+      GlobalUserData.UserTransactions.AddTransaction(Input);
    }
 
 

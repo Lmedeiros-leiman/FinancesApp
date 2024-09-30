@@ -27,17 +27,34 @@ namespace FinancesApp.Components.Logic {
 
             _storageHandler = storageHandler;
             Transactions = [];
+
+            Task.Run(async () => {
+                var DatabaseTransactions = await _storageHandler.GetAllRecords<Transaction>(DatabaseTables.Transactions);
+
+                Transactions = DatabaseTransactions;
+                OnPropertyChanged(nameof(Transactions));
+            });
         }
         //
         //
         public ICollection<Transaction> Transactions {get; set;}
 
         public void AddTransaction(Transaction newTransaction) { 
-            Transactions.Add(newTransaction);
-            // saves to the database.
             
+            // saves to the database.
+            Task.Run(async () => {
+                await _storageHandler.AddToDatabase<Transaction>(newTransaction, DatabaseTables.Transactions);
+            });
+
+            // adds to the list.
+            Transactions.Add(newTransaction);
 
             OnPropertyChanged(nameof(Transactions));
+        }
+
+        public async Task<ICollection<Transaction>> GetTransactions() {
+            return await _storageHandler.GetAllRecords<Transaction>(DatabaseTables.Transactions);
+
         }
         
         /*
