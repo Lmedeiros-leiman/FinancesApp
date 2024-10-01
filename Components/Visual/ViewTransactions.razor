@@ -1,54 +1,63 @@
 @inherits ComponentBase
-@using System.Text.Json
 
-<table class="table">
-   <thead>
-      <tr>
-         
-      </tr>
-   </thead>
-   <tbody>
+@using System.Globalization
 
-@foreach( Transaction transaction in globalUserData.UserTransactions.Transactions ) {
-   
-   <tr>
-         <th class="">@(transaction.Title)</th>
-         <td>@(transaction.Ammount)</td>
-         
-         <td class="d-flex gap-1 justify-content-end">
-            <aside class="d-flex bg-secondary-subtle rounded-4 p-1 px-2">
-               @transaction.Category
-            </aside>
-            <footer class="bg-primary-subtle text-bg-primary rounded-4 w-auto p-1">
-               <span>
-                  @if (DateOnly.FromDateTime(DateTime.Now).Year != transaction.Date.Year ) {
-                     @transaction.Date.ToString("dd/MM/yyyy")
-                  } else {
-                     @transaction.Date.ToString( DateOnly.FromDateTime(DateTime.Now).Month != transaction.Date.Month ? "dd/MM" : "dd/MMM" ) 
-                  }
-               </span>
-               <span>
-                  @(transaction.Time)
-               </span>
+
+<Card class="my-1">
+   <CardBody>
+      <div style="width: 330px;" class=" d-flex justify-content-between align-items-center ">
+         <div class="d-flex gap-2 align-items-center">
+            <picture class="bg-primary-subtle p-1 px-2 rounded-2">
+               @switch (transaction.Category)
+               {
+                  default:
+                     <Icon Name="IconName.Shop" Size="IconSize.x3" />
+                     break;
+               }
+
+            </picture>
+            <div>
+               <header class="fs-5 text-capitalize">@(transaction.Category)</header>
+               <h1 class="fs-6 text-secondary"> @(transaction.id) yo @(transaction.Title)</h1>
+               <footer class="text-secondary text-nowrap" style="font-size: 0.66em;">
+                  <span>
+                     @(transaction.Date.ToString("dd-MM-yyyy"))
+                  </span>
+                  <span>
+                     @transaction.Time.ToString("HH:mm")
+                  </span>
+
+               </footer>
+            </div>
+         </div>
+
+         <aside class="fs-4 fw-bolder w-100 text-end d-flex flex-column">
+            <div>
+               @(transaction.Ammount.ToString("C", CultureInfo.CurrentCulture))
+            </div>
+
+            <footer class="fs-6 d-flex fw-normal justify-content-end mt-auto">
+               <Button @onclick="DeleteEntry" Color="ButtonColor.Danger" Type="ButtonType.Button"
+                  Size="ButtonSize.Small">Delete</Button>
+               <Button @onclick="ModifyEntry" Color="ButtonColor.Warning" Type="ButtonType.Button"
+                  Size="ButtonSize.Small">Modify</Button>
             </footer>
-         </td>
-   </tr>
+         </aside>
 
-   
-   <section class="d-flex w-100 justify-content-between gap-2 p-1 px-2 border border-success-subtle shadow shadow-sm rounded-2 align-items-center flex-grow-1 ">
-      <header class="fw-bold text-success">@(transaction.Title)</header>
-      <section>@(transaction.Ammount)</section>
-      <aside>@(transaction.Category)</aside>
-      
-   </section>
-   
-   
-   }
-   </tbody>
-</table>
+      </div>
+   </CardBody>
+</Card>
 
 @code {
    [CascadingParameter]
-   GlobalUserData globalUserData {get; set;} = default!;
-   string a = DateTime.Now.ToString("D/M");
+   GlobalUserData globalUserData { get; set; } = default!;
+   [Parameter]
+   public required Transaction transaction { get; set; } = default!;
+   public void ModifyEntry()
+   {
+
+   }
+   public async void DeleteEntry() {
+      
+   }
 }

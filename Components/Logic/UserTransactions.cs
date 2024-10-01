@@ -11,8 +11,9 @@ using TG.Blazor.IndexedDB;
 
 namespace FinancesApp.Models {
     public class Transaction {
+        public string id {get; set;} = "";
         public string Title {get; set;} = "";
-        public int Ammount {get; set;}
+        public double Ammount {get; set;}
         public string Category {get; set;} = "";
         public DateOnly Date {get; set;} = DateOnly.FromDateTime(DateTime.Now);
         public TimeOnly Time {get; set;} = TimeOnly.FromDateTime(DateTime.Now);
@@ -24,20 +25,16 @@ namespace FinancesApp.Components.Logic {
         public event PropertyChangedEventHandler? PropertyChanged;
         private readonly StorageHandler _storageHandler;
         public UserTransactions(StorageHandler storageHandler ) {
-
             _storageHandler = storageHandler;
-            Transactions = [];
 
             Task.Run(async () => {
-                var DatabaseTransactions = await _storageHandler.GetAllRecords<Transaction>(DatabaseTables.Transactions);
+                await this.GetTransactions();
 
-                Transactions = DatabaseTransactions;
-                OnPropertyChanged(nameof(Transactions));
             });
         }
         //
         //
-        public ICollection<Transaction> Transactions {get; set;}
+        public ICollection<Transaction> Transactions {get; set;} = [];
 
         public void AddTransaction(Transaction newTransaction) { 
             
@@ -52,8 +49,14 @@ namespace FinancesApp.Components.Logic {
             OnPropertyChanged(nameof(Transactions));
         }
 
-        public async Task<ICollection<Transaction>> GetTransactions() {
-            return await _storageHandler.GetAllRecords<Transaction>(DatabaseTables.Transactions);
+        private async Task GetTransactions() {
+            this.Transactions = await _storageHandler.GetAllRecords<Transaction>(DatabaseTables.Transactions);
+            OnPropertyChanged(nameof(this.Transactions));
+        }
+
+        public async Task DeleteTransaction(Transaction target) {
+            Transactions.Remove(target);
+            await _storageHandler.RemoveFromDatabase<Transaction>(target.id, DatabaseTables.Transactions);
 
         }
         
@@ -72,8 +75,9 @@ namespace FinancesApp.Components.Logic {
             });
         }
         */
+
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = default) {
-            PropertyChanged?.Invoke(this, new(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName ?? string.Empty));
         }
     }
 }

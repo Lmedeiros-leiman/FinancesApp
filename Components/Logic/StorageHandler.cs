@@ -43,7 +43,10 @@ namespace FinancesApp.Components.Logic {
 
             await dBManager.AddRecord(newRecord);
         }
-        
+
+        public async Task RemoveFromDatabase<T>(string targetID, DatabaseTables table) {
+            await dBManager.DeleteRecord(table.ToString(), targetID);
+        }
         
         
         // Query from database
