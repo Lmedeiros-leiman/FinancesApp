@@ -1,17 +1,27 @@
+import { openDB } from "idb";
 import { Transaction } from "../Types/Transaction";
 
+export enum DatabaseStores {
+   // the equivalent of a table.
+   Finances = "Finances",
+}
+
+
 export class Database {
-   static UserTransactions : Transaction[] = [];
+   public static readonly DatabaseName: string = "Finances";
+   public static readonly DatabaseVersion: number = 1; // pre alpha :3
 
-   static AddEntry(newEntry : Transaction) {
+   public static async getDB() {
+      return await openDB(Database.DatabaseName, Database.DatabaseVersion, {
+         upgrade(db) {
+            console.log("Updating database...")
+            Object.keys(DatabaseStores).forEach(storeName => {
+               db.createObjectStore(storeName, { keyPath: 'id', autoIncrement: true });
+            });
 
+            console.log("Database updated!")
+         }
+      });
    }
-   
-   static GetEntries(table : string) {
-   }
-
-   static RemoveEntry(table : string, id : number) {}
-
-   static UpdateEntry(table : string, id : number, newEntry : Transaction) {}
 
 }

@@ -8,7 +8,6 @@ export type Transaction = {
    dateTime: Date;
    // gets added when the transaction is saved
    // for internal use only.
-   id : string;
    createdAt: Date | number;
 }
 

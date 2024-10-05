@@ -4,7 +4,7 @@ import { Dialog } from "primereact/dialog";
 import { useState } from "react";
 import { Transaction } from "../Types/Transaction";
 import { Calendar } from "primereact/calendar";
-import { Database, DatabaseTables } from "../Data/Database";
+import { Database, DatabaseStores } from "../Data/Database";
 import { InputText } from "primereact/inputtext";
 import { FloatLabel } from "primereact/floatlabel";
 import { InputNumber } from "primereact/inputnumber";
@@ -66,20 +66,23 @@ export default function InputTransaction() {
          type: null,
          // these values get added once the transaction is saved.
          createdAt: 0,
-         id: ""
       })
       setOpen(false);
 
    }
-   function HandleSave() {
-      setNewTransaction({ ...newTransaction, createdAt: Date.now(), })
-      Database.AddEntry(newTransaction, DatabaseTables.UserTransactions)
-
-
-
+   async function HandleSave() {
+      setNewTransaction({ ...newTransaction ,createdAt: Date.now() })
+      const db = await Database.getDB();
+      /*
+      while (await db.getKey(DatabaseStores.Finances ,newTransaction.id)) {
+         setNewTransaction({...newTransaction, id : crypto.randomUUID()})
+      }
+      */
+      await db.add(DatabaseStores.Finances, newTransaction)
       
+      db.close()
+      HandleClose();
    }
-
    return (<>
       <Button onClick={() => setOpen(true)}>Yo</Button>
       <pre>
