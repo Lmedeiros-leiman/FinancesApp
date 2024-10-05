@@ -1,20 +1,14 @@
-export class Transaction  {
-   id: number = 0;
-   title: string;
-   amount: number;
-   type: string;
+export type Transaction = {
+   title : string;
+   amount : number;
+   // defaults to US Dollars.
+   ammountType : string;
+   type: string | null ;
    category: string;
-   date: string;
-   time: string;
-   createdAt: string;
-
-   constructor(title: string, amount: number, type: string, category: string, date: string, time: string, createdAt: string) {
-      this.title = title;
-      this.amount = amount;
-      this.type = type;
-      this.category = category;
-      this.date = date;
-      this.time = time;
-      this.createdAt = createdAt;
-   }
+   dateTime: Date;
+   // gets added when the transaction is saved
+   // for internal use only.
+   id : string;
+   createdAt: Date | number;
 }
+
