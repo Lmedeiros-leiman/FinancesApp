@@ -1,59 +1,34 @@
 
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
-import { useState } from "react";
-import { Transaction } from "../Types/Transaction";
+import { useContext, useState } from "react";
+import { Transaction } from "../Data/Types/Transaction";
 import { Calendar } from "primereact/calendar";
 import { Database, DatabaseStores } from "../Data/Database";
 import { InputText } from "primereact/inputtext";
 import { FloatLabel } from "primereact/floatlabel";
 import { InputNumber } from "primereact/inputnumber";
-import { TreeSelect } from "primereact/treeselect";
 import { TreeNode } from "primereact/treenode";
-import { PrimeIcons } from "primereact/api";
+import { Dropdown } from "primereact/dropdown";
+import { TransactionType, TransactionTypes } from "../Data/Selections/TransactionTypes";
+import { GlobalContext } from "../Data/GlobalContext";
 
 
 export default function InputTransaction() {
-
+   const context = useContext(GlobalContext)
    const [open, setOpen] = useState(false);
    const [newTransaction, setNewTransaction] = useState<Transaction>({
       title: "",
       amount: 0,
       ammountType: "USD",
       category: "",
-      dateTime: new Date(/* current date */),
+      dateTime: new Date(/* current date */).getTime(),
       type: null,
       // these values get added once the transaction is saved.
-      createdAt: 0,
-      id: ""
+      createdAt: new Date(/* current date */).getTime(),
+      id: crypto.randomUUID(),
    });
 
-
-   const Availabletypes: TreeNode[] = [
-      {
-         key: "0",
-         icon: 'pi pi-folder',
-         label: 'None',
-         data: null,
-
-      },
-      {
-         key: "Expense",
-         icon: 'pi pi-folder',
-         label: 'Expense',
-      },
-      {
-         key: "Income",
-         icon: 'pi pi-folder',
-         label: 'Income',
-      }
-   ]
-
-   const AvailableCurrencies : TreeNode[] = [
-      {} // to be implemented.
-   ]
-
-   const formater = new Intl.NumberFormat(navigator.language, { style: "currency", currency: "USD" })
 
 
    function HandleClose() {
@@ -62,33 +37,41 @@ export default function InputTransaction() {
          amount: 0,
          ammountType: "USD",
          category: "",
-         dateTime: new Date(/* current date */),
+         dateTime: new Date(/* current date */).getTime(),
          type: null,
          // these values get added once the transaction is saved.
-         createdAt: 0,
+         createdAt: new Date(/* current date */).getTime(),
+         id: crypto.randomUUID(),
       })
       setOpen(false);
 
    }
    async function HandleSave() {
-      setNewTransaction({ ...newTransaction ,createdAt: Date.now() })
+      console.log("Adding new transaction to database...")
       const db = await Database.getDB();
-      /*
-      while (await db.getKey(DatabaseStores.Finances ,newTransaction.id)) {
+      
+      while (await db.getKey(DatabaseStores.Finances, newTransaction.id) == newTransaction.id ) {
          setNewTransaction({...newTransaction, id : crypto.randomUUID()})
       }
-      */
+      setNewTransaction({ ...newTransaction, createdAt: new Date() })
       await db.add(DatabaseStores.Finances, newTransaction)
       
-      db.close()
+      context.UpdateData(prevData => ({
+         ...prevData, 
+         Finances: [
+            ...prevData.Finances, 
+            newTransaction
+         ]
+      }));
+      
+      console.log(newTransaction)
+      console.log("New transaction added to database.")
+      await db.close()
       HandleClose();
    }
    return (<>
       <Button onClick={() => setOpen(true)}>Yo</Button>
-      <pre>
-         {JSON.stringify(newTransaction)}
-      </pre>
-
+      
       <Dialog header="New Transaction" visible={open} draggable={false} onHide={HandleClose}>
          <form onSubmit={(e) => { e.preventDefault(); HandleSave() }}>
          <div className="flex flex-column gap-2 pt-4 " >
@@ -97,22 +80,37 @@ export default function InputTransaction() {
                   <InputText required id="Transactiontitle" value={newTransaction.title} onChange={(e) => setNewTransaction({ ...newTransaction, title: e.target.value })} ></InputText>
                   <label htmlFor="Transactiontitle">Title</label>
                </FloatLabel>
-               <div >
-                  <TreeSelect required options={Availabletypes}
-                     placeholder="Select a type"
-                     selectionMode="single"
-                     display="chip"
-                     value={newTransaction.type}
-                     onChange={(e) => {
-                        if (e.value != undefined) {
-                           if (e.value == "0") {
-                              setNewTransaction({ ...newTransaction, type: null })
-                           } else {
-                              setNewTransaction({ ...newTransaction, type: e.value.toString() })
-                           }  
+               <div>
+                  <Dropdown style={{ width: "180px" }}
+                     value={newTransaction.type} editable clearIcon
+                     options={TransactionTypes}
+                     optionLabel="name"
+                     optionValue="value"
+                     valueTemplate={(option : TransactionType, props) => {
+                        if (option) {
+                           return (<div className="flex align-items-center">
+                              <i className={`pi ${option.icon} mr-2`}></i>
+                              {option.name}
+                           </div>)
                         }
+                        return <span>{props.placeholder}</span>;
                      }}
+                     itemTemplate={(option : TransactionType) => {
+                        return (<div className="flex align-items-center"> 
+                           <i className={`pi ${option.icon} mr-2`}></i> 
+                           {option.name}
+                        </div>)
+                     }}
+                     onChange={(e) => { 
+                        setNewTransaction({ 
+                           ...newTransaction, 
+                           type: e.value
+                        })
+                     }}
+
+                     placeholder="Transaction Type"
                   />
+                  
                </div>
             </header>
             <FloatLabel className="mb-4">
@@ -125,10 +123,10 @@ export default function InputTransaction() {
                <label>Transaction Amount</label>
             </FloatLabel>
             <FloatLabel className="mb-4">
-               <Calendar value={newTransaction.dateTime} showTime hourFormat="12" required
+               <Calendar value={new Date(newTransaction.dateTime)} showTime hourFormat="12" required
                   onChange={(e) => {
                      if (e.value != null && e.value != undefined) {
-                        setNewTransaction({ ...newTransaction, dateTime: new Date(e.value.getTime()) })
+                        setNewTransaction({ ...newTransaction, dateTime: e.value.getTime() })
                      }
                   }}
                />
