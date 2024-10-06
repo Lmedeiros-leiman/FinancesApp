@@ -3,11 +3,12 @@ export type Transaction = {
    amount : number;
    // defaults to US Dollars.
    ammountType : string;
-   type: string | null ;
+   type: string | null;
    category: string;
-   dateTime: Date;
+   dateTime: Date | number;
    // gets added when the transaction is saved
    // for internal use only.
+   id: string;
    createdAt: Date | number;
 }
 

@@ -1,5 +1,4 @@
 import { openDB } from "idb";
-import { Transaction } from "../Types/Transaction";
 
 export enum DatabaseStores {
    // the equivalent of a table.
