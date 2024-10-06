@@ -70,7 +70,7 @@ export default function InputTransaction() {
       HandleClose();
    }
    return (<>
-      <Button onClick={() => setOpen(true)}>Yo</Button>
+      <Button onClick={() => setOpen(true)}><i className="pi pi-plus"></i></Button>
       
       <Dialog header="New Transaction" visible={open} draggable={false} onHide={HandleClose}>
          <form onSubmit={(e) => { e.preventDefault(); HandleSave() }}>
