@@ -10,7 +10,7 @@ import { FloatLabel } from "primereact/floatlabel";
 import { InputNumber } from "primereact/inputnumber";
 import { TreeNode } from "primereact/treenode";
 import { Dropdown } from "primereact/dropdown";
-import { TransactionType, TransactionTypes } from "../Data/Selections/TransactionTypes";
+import { IconList, TransactionType, TransactionTypes } from "../Data/Selections/TransactionTypes";
 import { GlobalContext } from "../Data/GlobalContext";
 
 
@@ -80,7 +80,7 @@ export default function InputTransaction() {
                   <InputText required id="Transactiontitle" value={newTransaction.title} onChange={(e) => setNewTransaction({ ...newTransaction, title: e.target.value })} ></InputText>
                   <label htmlFor="Transactiontitle">Title</label>
                </FloatLabel>
-               <div>
+               <FloatLabel>
                   <Dropdown style={{ width: "180px" }}
                      value={newTransaction.type} editable clearIcon
                      options={TransactionTypes}
@@ -89,16 +89,16 @@ export default function InputTransaction() {
                      valueTemplate={(option : TransactionType, props) => {
                         if (option) {
                            return (<div className="flex align-items-center">
-                              <i className={`pi ${option.icon} mr-2`}></i>
-                              {option.name}
+                              <i className={`pi ${ IconList[option.name as keyof typeof IconList] } mr-2`}></i>
+                              <span>{option.name}</span>
                            </div>)
                         }
-                        return <span>{props.placeholder}</span>;
+                        return <span> </span>;
                      }}
                      itemTemplate={(option : TransactionType) => {
                         return (<div className="flex align-items-center"> 
-                           <i className={`pi ${option.icon} mr-2`}></i> 
-                           {option.name}
+                           <i className={`pi ${ IconList[option.name as keyof typeof IconList] } mr-2`}></i> 
+                           <span>{option.name}</span>
                         </div>)
                      }}
                      onChange={(e) => { 
@@ -110,8 +110,8 @@ export default function InputTransaction() {
 
                      placeholder="Transaction Type"
                   />
-                  
-               </div>
+                  <label>Transaction Type</label>
+               </FloatLabel>
             </header>
             <FloatLabel className="mb-4">
                <InputNumber required mode="currency" currency="USD" locale={navigator.language} id="Transactionamount" value={newTransaction.amount}
