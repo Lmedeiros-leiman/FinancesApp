@@ -5,10 +5,10 @@ export type Transaction = {
    ammountType : string;
    type: string | null;
    category: string;
-   dateTime: Date | number;
+   dateTime: number;
    // gets added when the transaction is saved
    // for internal use only.
    id: string;
-   createdAt: Date | number;
+   createdAt: number;
 }
 

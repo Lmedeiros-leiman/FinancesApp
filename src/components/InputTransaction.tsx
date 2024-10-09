@@ -8,7 +8,6 @@ import { Database, DatabaseStores } from "../Data/Database";
 import { InputText } from "primereact/inputtext";
 import { FloatLabel } from "primereact/floatlabel";
 import { InputNumber } from "primereact/inputnumber";
-import { TreeNode } from "primereact/treenode";
 import { Dropdown } from "primereact/dropdown";
 import { IconList, TransactionType, TransactionTypes } from "../Data/Selections/TransactionTypes";
 import { GlobalContext } from "../Data/GlobalContext";
@@ -50,10 +49,15 @@ export default function InputTransaction() {
       console.log("Adding new transaction to database...")
       const db = await Database.getDB();
       
+      if (newTransaction.type == "Expense") {
+         newTransaction.amount *= -1
+      }
+
       while (await db.getKey(DatabaseStores.Finances, newTransaction.id) == newTransaction.id ) {
          setNewTransaction({...newTransaction, id : crypto.randomUUID()})
       }
-      setNewTransaction({ ...newTransaction, createdAt: new Date() })
+
+      setNewTransaction({ ...newTransaction, createdAt: new Date().getTime() })
       await db.add(DatabaseStores.Finances, newTransaction)
       
       context.UpdateData(prevData => ({
@@ -64,13 +68,16 @@ export default function InputTransaction() {
          ]
       }));
       
-      console.log(newTransaction)
+      
       console.log("New transaction added to database.")
       await db.close()
       HandleClose();
    }
    return (<>
-      <Button onClick={() => setOpen(true)}><i className="pi pi-plus"></i></Button>
+      <Button className="" onClick={() => setOpen(true)}>
+         <i className="pi pi-plus pr-3"></i> 
+         Add new transaction
+      </Button>
       
       <Dialog header="New Transaction" visible={open} draggable={false} onHide={HandleClose}>
          <form onSubmit={(e) => { e.preventDefault(); HandleSave() }}>
@@ -86,7 +93,7 @@ export default function InputTransaction() {
                      options={TransactionTypes}
                      optionLabel="name"
                      optionValue="value"
-                     valueTemplate={(option : TransactionType, props) => {
+                     valueTemplate={(option : TransactionType) => {
                         if (option) {
                            return (<div className="flex align-items-center">
                               <i className={`pi ${ IconList[option.name as keyof typeof IconList] } mr-2`}></i>
