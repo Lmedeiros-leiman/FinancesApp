@@ -1,5 +1,12 @@
 # My Personal finances Application
 
+## About This repository.
+
+### Links
+  - [GitHub Repository](https://github.com/Lmedeiros-leiman/FinancesApp)
+  - [GitHub Live Website](https://lmedeiros-leiman.github.io/FinancesApp/)
+### Information
+
 This project hosts a personal finance application to manage expenses and income. 
 
 The application is built with the following technologies:

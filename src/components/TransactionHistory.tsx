@@ -24,6 +24,9 @@ export default function TransactionHistory() {
       setOrderedData(context.data.Finances.sort((a, b) => b.dateTime - a.dateTime))
    }, [context.data.Finances]);
 
+   if (orderedData.length == 0) {
+      return (<EmptyHistory />)
+   }
 
 
 
