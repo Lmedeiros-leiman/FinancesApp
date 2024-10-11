@@ -107,6 +107,12 @@ function TransactionCard(props: CardProps) {
    </>)
 }
 
+function EmptyHistory() {
+   return (<div>
+      new transactions will appear here.
+   </div>)
+}
+
 /*
 
 function PlaceholderComponent() {
