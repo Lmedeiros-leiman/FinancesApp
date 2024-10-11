@@ -1,8 +1,7 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { GlobalContext } from "../Data/GlobalContext";
 import { Transaction } from "../Data/Types/Transaction";
 import { Card } from "primereact/card";
-import { Skeleton } from "primereact/skeleton";
 import { Button } from "primereact/button";
 import { Database, DatabaseStores } from "../Data/Database";
 
@@ -108,6 +107,7 @@ function TransactionCard(props: CardProps) {
    </>)
 }
 
+/*
 
 function PlaceholderComponent() {
    function PlaceholderCard() {
@@ -142,33 +142,4 @@ function PlaceholderComponent() {
    )
 }
 
-function TransactionCardOld({ transaction }: { transaction: Transaction } & React.ComponentProps<any>) {
-
-   const data = useContext(GlobalContext).data.Finances
-
-   const formater = new Intl.NumberFormat(navigator.language,
-      {
-         style: 'currency',
-         currency: transaction.ammountType
-      });
-
-   
-
-   return (<Card className="max-w-20rem w-20rem shadow-2"
-      title={
-         <header>
-            <div className={"flex gap-2 align-items-center"}>
-               <span className={textColor + " " + backgroundColor + " px-3 py-1 border-round-3xl"}>{transaction.type}</span>
-               <span className="border-left-1 text-sm font-normal pl-1">{transaction.title}</span>
-            </div>
-
-         </header>
-      }>
-
-      <div className="font-bold flex justify-content-between">
-         <span className={textColor + " " + backgroundColor + " border-round-left-3xl text-lg px-2 flex-wrap"}>{currency}</span>
-         <span className="text-sm font-light font-italic">{new Date(transaction.dateTime).toLocaleDateString()} </span>
-      </div>
-
-   </Card>)
-}
+*/

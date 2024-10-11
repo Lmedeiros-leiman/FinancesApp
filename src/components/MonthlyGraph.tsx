@@ -5,7 +5,6 @@ import { Calendar } from "primereact/calendar"
 import { Card } from "primereact/card"
 import { FloatLabel } from "primereact/floatlabel"
 import "../styles/MonthlyGraph.css"
-import { Legend, plugins } from "chart.js"
 
 type DataPoint = {
    labels: string[]
