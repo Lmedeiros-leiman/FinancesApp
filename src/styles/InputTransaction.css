@@ -1,0 +1,13 @@
+
+
+
+@media screen and (max-width: 610px) {
+   .InputTransaction {
+      button i{
+         padding: 0 !important;
+      }
+      button span {
+         display: none;
+      }
+   }
+}

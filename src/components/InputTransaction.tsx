@@ -1,4 +1,3 @@
-
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { useContext, useState } from "react";
@@ -11,7 +10,7 @@ import { InputNumber } from "primereact/inputnumber";
 import { Dropdown } from "primereact/dropdown";
 import { IconList, TransactionType, TransactionTypes } from "../Data/Selections/TransactionTypes";
 import { GlobalContext } from "../Data/GlobalContext";
-
+import "../styles/InputTransaction.css";
 
 export default function InputTransaction() {
    const context = useContext(GlobalContext)
@@ -73,10 +72,10 @@ export default function InputTransaction() {
       await db.close()
       HandleClose();
    }
-   return (<>
+   return (<div className="InputTransaction">
       <Button className="" onClick={() => setOpen(true)}>
          <i className="pi pi-plus pr-3"></i> 
-         Add new transaction
+         <span>Add new transaction</span>
       </Button>
       
       <Dialog header="New Transaction" visible={open} draggable={false} onHide={HandleClose}>
@@ -151,6 +150,6 @@ export default function InputTransaction() {
          </footer>
          </form>
       </Dialog>
-   </>)
+   </div>)
 
 }
