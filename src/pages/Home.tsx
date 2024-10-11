@@ -24,7 +24,7 @@ export default function Home() {
             <MonthlyGraph/>
          </header>
          
-         <footer className="text-center flex flex-column">
+         <footer className="text-center flex flex-column w-full">
             <h2>Saved Transaction</h2>
             <TransactionHistory/>
          </footer>
