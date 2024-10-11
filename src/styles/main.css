@@ -1,1 +1,6 @@
-@import url("./MonthlyGraph.css");
+
+
+body,html {
+   padding: 0;
+   margin: 0;
+}
