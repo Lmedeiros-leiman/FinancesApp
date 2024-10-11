@@ -4,6 +4,7 @@ import { Transaction } from "../Data/Types/Transaction";
 import { Card } from "primereact/card";
 import { Skeleton } from "primereact/skeleton";
 import { Button } from "primereact/button";
+import { Database, DatabaseStores } from "../Data/Database";
 
 
 
@@ -21,19 +22,19 @@ export default function TransactionHistory() {
 
    const [orderedData, setOrderedData] = useState<Transaction[]>(context.data.Finances);
    useEffect(() => {
-
-   }, []);
-
-
+      setOrderedData(context.data.Finances.sort((a, b) => b.dateTime - a.dateTime))
+   }, [context.data.Finances]);
 
 
-   return (<>
-      <div className="flex justify-content-center gap-3 flex-wrap py-2 px-1">
-         {context.data.Finances.length > 0 && context.data.Finances.map((transaction: Transaction) => (
-            <TransactionCard transaction={transaction} key={transaction.id} />
+
+
+   return (<div className="flex relative justify-content-center gap-3 flex-wrap py-2 px-1 w-full">
+         {orderedData.length > 0 && orderedData.map((transaction: Transaction) => (
+            <>
+               <TransactionCard transaction={transaction} key={transaction.id} />
+            </>
          ))}
-      </div>
-   </>)
+      </div>)
 }
 
 
@@ -42,6 +43,9 @@ interface CardProps {
 }
 
 function TransactionCard(props: CardProps) {
+   const [busy, setBusy] = useState(false)
+   const context = useContext(GlobalContext)
+
    const { transaction } = props;
    const formater = new Intl.NumberFormat(navigator.language, {
       style: 'currency',
@@ -51,22 +55,23 @@ function TransactionCard(props: CardProps) {
    const backgroundColor = transaction.type == "Expense" ? "bg-red-200" : "bg-green-200"
    const textColor = transaction.type == "Expense" ? "text-red-500" : "text-green-500"
    const icon = transaction.type == "Expense" ? "pi pi-send" : "pi pi-dollar"
+   const transactionTime = new Date(transaction.dateTime)
+
    return (<>
-      <Card className=" sm:col-4 col-10 shadow-4 p-1" key={transaction.id}>
+      <Card className=" sm:col-4 col-12 shadow-4 p-1" key={transaction.id}>
          <article className="flex flex-column justify-content-between xl:flex-row xl:align-items-start p-0 gap-3">
             <div className="flex gap-3">
-               <header className="flex flex-column ">
-               <i className={` ${icon} + ${backgroundColor} + border-round-3xl text-4xl p-2 `}></i>
-               
-                  <div>
-                     {new Date(transaction.dateTime).toLocaleDateString()}
-                  </div>
-                     <div className="flex align-items-center gap-3">
-                        <span className="flex align-items-center gap-2">
-                           <i className="pi pi-tag"></i>
-                           <span className="font-semibold">{transaction.category}</span>
-                        </span>
-                     </div>
+               <header className="flex flex-column justify-content-start">
+                  <i className={` ${icon} + ${backgroundColor} + border-round-3xl text-4xl p-2 `}></i>
+                  
+                  <div> {transactionTime.toLocaleDateString()} </div>
+                  <div> {transactionTime.toLocaleTimeString()} </div>
+                  
+                  <span className="flex align-items-center align-content-center gap-2">
+                     <i className="pi pi-tag"></i>
+                     <span className="font-semibold">{transaction.category}</span>
+                  </span>
+                  
                </header>
                
                <section className="flex flex-column flex-wrap justify-content-start text-justify gap-0">
@@ -75,12 +80,29 @@ function TransactionCard(props: CardProps) {
                </section>
             </div>
 
-            <footer className="flex sm:flex-column align-items-center sm:align-items-end gap-3 sm:gap-2">
+            <footer className="flex sm:flex-column align-items-center sm:align-items-end mt-2 sm:mt-0">
                
-               <Button severity="danger" outlined>
+               <Button severity="danger" disabled={busy} outlined onClick={ async () => {
+                  setBusy(true)
+                  const db = await Database.getDB();
+                  const data = context.data.Finances
+
+
+                  db.delete(DatabaseStores.Finances, transaction.id)
+                  let indexToDelete = data.findIndex(t => t.id == transaction.id)
+                  context.UpdateData(prevData => ({
+                     ...prevData,
+                     Finances: data.filter( (_,index) => index !== indexToDelete)
+                     
+                  }));
+                  
+
+                  setBusy(false)
+               }}>
                   <i className="pi pi-trash "></i>
                </Button>
             </footer>
+            
          </article>
       </Card>
    </>)
