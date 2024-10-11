@@ -4,6 +4,8 @@ import { Chart } from "primereact/chart"
 import { Calendar } from "primereact/calendar"
 import { Card } from "primereact/card"
 import { FloatLabel } from "primereact/floatlabel"
+import "../styles/MonthlyGraph.css"
+import { Legend, plugins } from "chart.js"
 
 type DataPoint = {
    labels: string[]
@@ -17,11 +19,16 @@ type DataPoint = {
    }[];
 }
 
+const chartOptions = {
+   maintainAspectRatio: false,
+   plugins: {},
+   Legend: {},
+
+}
 
 export default function MonthlyGraph() {
    const context = useContext(GlobalContext)
 
-   
 
    if (context.data.FetchingFinanceData) {
       return (<div>Loading...</div>)
@@ -115,21 +122,10 @@ export default function MonthlyGraph() {
             <label>Time range</label>
          </FloatLabel>
       </header>
-      <Chart type="line" data={validData} />
+      
+         <Chart type="line" data={validData} options={chartOptions} />
+      
    </Card>
    )
-
-   return (<div className="flex flex-wrap justify-content-end ">
-
-
-
-      <Card className="flex justify-content-end w-min shadow-3 MonthlyGraph">
-
-         <article className="w-30rem ">
-            <Chart type="line" data={validData} />
-         </article>
-      </Card>
-
-   </div>)
 }
 
