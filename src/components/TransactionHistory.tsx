@@ -4,6 +4,7 @@ import { Transaction } from "../Data/Types/Transaction";
 import { Card } from "primereact/card";
 import { Button } from "primereact/button";
 import { Database, DatabaseStores } from "../Data/Database";
+import InputTransaction from "./InputTransaction";
 
 
 
@@ -13,8 +14,11 @@ export default function TransactionHistory() {
 
    if (loading) {
       return (<>
-         <div>
-            Loading...
+         <div className="flex relative justify-content-center gap-3 flex-wrap py-2 px-1 w-full">
+            { Array(5).fill(0).map((_) => (
+            
+               <PlaceholderCard />
+            ))}
          </div>
       </>)
    }
@@ -25,7 +29,9 @@ export default function TransactionHistory() {
    }, [context.data.Finances]);
 
    if (orderedData.length == 0) {
-      return (<EmptyHistory />)
+      return ( <div className="flex justify-content-center">
+         <EmptyHistory />
+      </div>)
    }
 
 
@@ -64,7 +70,7 @@ function TransactionCard(props: CardProps) {
          <article className="flex flex-column justify-content-between xl:flex-row xl:align-items-start p-0 gap-3">
             <div className="flex gap-3">
                <header className="flex flex-column justify-content-start">
-                  <i className={` ${icon} + ${backgroundColor} + border-round-3xl text-4xl p-2 `}></i>
+                  <i className={` ${icon} + ${backgroundColor} border-round-3xl text-4xl p-2 `}></i>
                   
                   <div> {transactionTime.toLocaleDateString()} </div>
                   <div> {transactionTime.toLocaleTimeString()} </div>
@@ -111,9 +117,47 @@ function TransactionCard(props: CardProps) {
 }
 
 function EmptyHistory() {
-   return (<div>
-      new transactions will appear here.
-   </div>)
+   return (<Card className=" max-w-20rem p-2 text-lg">
+      <section className="mb-3">new transactions will appear here.</section>
+      <InputTransaction/>
+   </Card>)
+}
+
+function PlaceholderCard() {
+   
+
+
+   return (<>
+      <Card className=" sm:col-4 col-12 shadow-4 p-1">
+         <article className="flex flex-column justify-content-between xl:flex-row xl:align-items-start p-0 gap-3">
+            <div className="flex gap-3">
+               <header className="flex flex-column justify-content-start">
+                  <i className={`  pi pi-tag  border-round-3xl text-4xl p-2 `}></i>
+                  
+                  <div>  </div>
+                  <div>  </div>
+                  
+                  <span className="flex align-items-center align-content-center gap-2">
+                     <i className="pi pi-tag"></i>
+                     <span className="font-semibold"> </span>
+                  </span>
+                  
+               </header>
+               
+               <section className="flex flex-column flex-wrap justify-content-start text-justify gap-0">
+                  <h2 className="text-2xl font-bold text-900 flex-wrap m-0">  </h2>
+                  <div>  </div>
+               </section>
+            </div>
+
+            <footer className="flex sm:flex-column align-items-center sm:align-items-end mt-2 sm:mt-0">
+               
+               
+            </footer>
+            
+         </article>
+      </Card>
+   </>)
 }
 
 /*
