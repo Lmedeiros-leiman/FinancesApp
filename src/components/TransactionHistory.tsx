@@ -5,6 +5,7 @@ import { Card } from "primereact/card";
 import { Button } from "primereact/button";
 import { Database, DatabaseStores } from "../Data/Database";
 import InputTransaction from "./InputTransaction";
+import { Skeleton } from "primereact/skeleton";
 
 
 
@@ -12,11 +13,10 @@ export default function TransactionHistory() {
    const context = useContext(GlobalContext)
    const loading = context.data.FetchingFinanceData
 
-   if (loading) {
+   if (!loading) {
       return (<>
          <div className="flex relative justify-content-center gap-3 flex-wrap py-2 px-1 w-full">
             { Array(5).fill(0).map((_) => (
-            
                <PlaceholderCard />
             ))}
          </div>
@@ -69,8 +69,8 @@ function TransactionCard(props: CardProps) {
       <Card className=" sm:col-4 col-12 shadow-4 p-1" key={transaction.id}>
          <article className="flex flex-column justify-content-between xl:flex-row xl:align-items-start p-0 gap-3">
             <div className="flex gap-3">
-               <header className="flex flex-column justify-content-start">
-                  <i className={` ${icon} + ${backgroundColor} border-round-3xl text-4xl p-2 `}></i>
+               <header className="flex flex-column justify-content-start ">
+                  <i className={` ${icon} + ${backgroundColor} mx-auto border-round-3xl text-4xl p-2 h-3 w-max`}></i>
                   
                   <div> {transactionTime.toLocaleDateString()} </div>
                   <div> {transactionTime.toLocaleTimeString()} </div>
@@ -124,38 +124,26 @@ function EmptyHistory() {
 }
 
 function PlaceholderCard() {
-   
-
-
    return (<>
       <Card className=" sm:col-4 col-12 shadow-4 p-1">
-         <article className="flex flex-column justify-content-between xl:flex-row xl:align-items-start p-0 gap-3">
-            <div className="flex gap-3">
-               <header className="flex flex-column justify-content-start">
-                  <i className={`  pi pi-tag  border-round-3xl text-4xl p-2 `}></i>
-                  
-                  <div>  </div>
-                  <div>  </div>
-                  
-                  <span className="flex align-items-center align-content-center gap-2">
-                     <i className="pi pi-tag"></i>
-                     <span className="font-semibold"> </span>
-                  </span>
-                  
-               </header>
-               
-               <section className="flex flex-column flex-wrap justify-content-start text-justify gap-0">
-                  <h2 className="text-2xl font-bold text-900 flex-wrap m-0">  </h2>
-                  <div>  </div>
-               </section>
+         <article className="flex gap-3">
+            <aside>
+               <Skeleton className=" border-round-3xl h-3rem w-3rem mb-1" />
+               <Skeleton className="w-5rem mb-1" />
+               <Skeleton className="w-4rem mb-2" />
+            </aside>
+            <div className=" flex flex-column gap-2 pt-3 flex-grow-1">
+               <Skeleton className="w-16rem h-2rem" />
+               <Skeleton className="w-12rem " />
             </div>
-
-            <footer className="flex sm:flex-column align-items-center sm:align-items-end mt-2 sm:mt-0">
-               
-               
-            </footer>
-            
          </article>
+         <footer className="flex gap-2 align-items-center">
+            <Skeleton className="w-2rem h-2rem border-round-3xl " />
+            <Skeleton className="w-5rem" />
+            <Skeleton className="w-5rem" />
+            <Skeleton className="w-5rem" />
+         </footer>
+         
       </Card>
    </>)
 }
