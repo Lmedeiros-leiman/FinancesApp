@@ -3,6 +3,7 @@ import { GlobalContext } from "../Data/GlobalContext"
 import { InputText } from "primereact/inputtext"
 import { Button } from "primereact/button"
 import "../styles/BalanceDisplay.css"
+import { Skeleton } from "primereact/skeleton"
 
 
 
@@ -25,19 +26,17 @@ export default function BalanceDisplay() {
 
 
    if (data.data.FetchingFinanceData) {
-      return (<div>Loading...</div>)
+      return (<span className="flex gap-1">
+         <Skeleton className="w-10rem h-2rem"/>
+         <Skeleton className="w-2rem h-2rem"/>
+      </span>)
    } 
 
-   return (<div className="flex align-content-center align-items-center gap-1">
-      
-      
+   return (<span className="flex gap-1">
          <InputText className="text-1xl" value={ !hidden && savedValue != "Loading..." ? "Hidden." : savedValue} readOnly /> 
          
-      
-         <span> 
-            <Button onClick={() => setHidden(!hidden)}>
-               <i className={hidden ? "pi pi-eye" : "pi pi-eye-slash"} />
-            </Button> 
-         </span>
-   </div>)
+         <Button onClick={() => setHidden(!hidden)}>
+            <i className={hidden ? "pi pi-eye" : "pi pi-eye-slash"} />
+         </Button> 
+   </span>)
 }
