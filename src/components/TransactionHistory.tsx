@@ -13,7 +13,7 @@ export default function TransactionHistory() {
    const context = useContext(GlobalContext)
    const loading = context.data.FetchingFinanceData
 
-   if (!loading) {
+   if (loading) {
       return (<>
          <div className="flex relative justify-content-center gap-3 flex-wrap py-2 px-1 w-full">
             { Array(5).fill(0).map((_) => (
@@ -147,40 +147,3 @@ function PlaceholderCard() {
       </Card>
    </>)
 }
-
-/*
-
-function PlaceholderComponent() {
-   function PlaceholderCard() {
-      return (<Card className="max-w-20rem w-20rem shadow-2"
-         title={
-            <header>
-               <div className={"flex gap-2 align-items-center"}>
-                  <span><Skeleton width="4rem"></Skeleton></span>
-                  <span className="border-left-1 text-sm font-normal pl-1"><Skeleton width="8rem"></Skeleton></span>
-               </div>
-
-            </header>
-         }>
-
-         <div className="font-bold flex justify-content-between">
-            <span><Skeleton width="10rem"></Skeleton></span>
-            <span className="text-sm font-light font-italic"><Skeleton width="4rem" ></Skeleton></span>
-         </div>
-
-      </Card>)
-   }
-
-
-   return (
-      <div className="flex justify-content-center gap-3 mt-2 flex-wrap py-2 px-1">
-         <PlaceholderCard key={window.crypto.randomUUID()} />
-         <PlaceholderCard key={window.crypto.randomUUID()} />
-         <PlaceholderCard key={window.crypto.randomUUID()} />
-         <PlaceholderCard key={window.crypto.randomUUID()} />
-         <PlaceholderCard key={window.crypto.randomUUID()} />
-      </div>
-   )
-}
-
-*/
