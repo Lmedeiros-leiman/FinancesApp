@@ -23,8 +23,8 @@ export default function Home() {
             <MonthlyGraph/>
          </header>
          
-         <footer className="text-center flex flex-column w-full">
-            <h2>Saved Transaction</h2>
+         <footer className="text-center flex mt-5 flex-column w-full">
+            
             <TransactionHistory/>
          </footer>
       </div>
