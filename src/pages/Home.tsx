@@ -9,12 +9,8 @@ export default function Home() {
       
       <nav className="mt-1 mb-2 mx-1 shadow-4 py-1 px-2 bg-white border-round">
          <div className=" flex justify-content-between align-content-center align-items-center">
-            <span>
-               <BalanceDisplay />
-            </span>
-            <span>
-               <InputTransaction/>
-            </span>
+            <BalanceDisplay />
+            <InputTransaction/>
          </div>
       </nav>
       
@@ -28,7 +24,5 @@ export default function Home() {
             <TransactionHistory/>
          </footer>
       </div>
-         
-         
-      </main>)
+   </main>)
 }
