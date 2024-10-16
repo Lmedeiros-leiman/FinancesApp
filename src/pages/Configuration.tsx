@@ -1,24 +1,47 @@
 import { Dropdown } from "primereact/dropdown";
 import { AvailableThemes } from "../Data/Selections/AvailableThemes";
-import { useEffect, useState } from "react";
-
-
-// ./node_modules/primereact/resources/themes/saga-blue/theme.css
+import { useContext, useEffect, useState } from "react";
+import { FloatLabel } from "primereact/floatlabel";
+import { GlobalContext } from "../Data/GlobalContext";
 
 export default function Configuration() {
-   const [selectedTheme, setSelectedTheme] = useState<string>( localStorage.getItem("theme") || "saga-blue");
-
+   const context = useContext(GlobalContext);
+   const [selectedTheme, setSelectedTheme] = useState<string>( localStorage.getItem("theme") || "Nova");
    useEffect(() => {
-      const themeLink = document.getElementById("mainStyle") as HTMLLinkElement;
+      // ./node_modules/primereact/resources/themes/{ThemeFolder}/theme.css
+      const themeValue = AvailableThemes[selectedTheme as keyof typeof AvailableThemes];
+
       localStorage.setItem("theme", selectedTheme); // saves theme in local storage
-      themeLink.href = `./node_modules/primereact/resources/themes/${selectedTheme}/theme.css`;
-   },[selectedTheme])
-   return (
-      <div className="p-1 mt-5 mx-2">
-         
-         <Dropdown value={selectedTheme} filter
-         onChange={(value) => setSelectedTheme(AvailableThemes[value.value as keyof typeof AvailableThemes] )} 
-         placeholder="Select Theme" options={Object.keys(AvailableThemes)} />
-            {selectedTheme}
-      </div>)
+      (document.getElementById("mainStyle") as HTMLLinkElement).href = `./node_modules/primereact/resources/themes/${themeValue}/theme.css`;
+   },[selectedTheme]);
+
+   // user preference for AmmountType (coin type)
+   //const [selectedCoinType, setSelectedCoinType] = useState<string>( "USD");
+   //const test = MoneyConversionApi.getLatestRates().then((data) => console.log(data));
+   
+   //const currencyFormater = new Intl.NumberFormat(navigator.language || 'en-US', {
+   
+   return (<section className="flex flex-wrap ">
+      <div className=" m-1 border-round w-min px-3 pb-3 pt-5 surface-ground ">
+         <FloatLabel>
+            <Dropdown className="w-10rem"
+            value={selectedTheme} filter  options={Object.keys(AvailableThemes)}
+            onChange={(value) => setSelectedTheme(value.value)} 
+            placeholder="Select Theme"  />
+            <label>Curent Theme</label>
+         </FloatLabel>
+      </div>
+
+      <div className="surface-ground px-3 pb-3 pt-5 m-1 border-round">
+         Prefered Base Coin
+
+      </div>
+
+      <footer className="flex-grow-1 w-full p-3 surface-300 shadow-6 m-5">
+         <span>Debug Data.</span>
+         <pre>
+            {JSON.stringify(context, null, 2)}
+         </pre>
+      </footer>
+   </section>);
 }
