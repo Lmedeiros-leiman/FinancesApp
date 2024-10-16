@@ -20,14 +20,10 @@ type DataPoint = {
 
 const chartOptions = {
    maintainAspectRatio: false,
-   plugins: {},
-   Legend: {},
-
 }
 
 export default function MonthlyGraph() {
-   const context = useContext(GlobalContext)
-
+   const context = useContext(GlobalContext);
 
    if (context.data.FetchingFinanceData) {
       return (<div>Loading...</div>)
@@ -121,9 +117,7 @@ export default function MonthlyGraph() {
             <label>Time range</label>
          </FloatLabel>
       </header>
-      
          <Chart type="line" data={validData} options={chartOptions} />
-      
    </Card>
    )
 }
