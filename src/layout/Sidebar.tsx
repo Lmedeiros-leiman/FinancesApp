@@ -16,8 +16,9 @@ export default function Sidebar() {
    const [selectedPage, setSelectedPage] = useState<string>("Home")
 
 
-   return (<div className="flex">
-      <aside className=" sticky top-0 left-0 h-auto bg-white shadow-2 relative max-h-screen" >
+   return (<div className="flex h-screen max-h-screen">
+      <span className="w-3rem bg-red-100"></span>
+      <aside className=" fixed h-full z-5 top-0 left-0 bg-white shadow-2 " >
          <nav className="flex flex-column justify-content-between h-full py-2 px-1 ">
             
             <span className="flex flex-column gap-1">
@@ -32,10 +33,8 @@ export default function Sidebar() {
 
          </nav>
       </aside>
-      <article>
+      <article className="w-full h-full">
          {Pages[selectedPage]}
-
-         <div className="bg-green-100  h-5rem w-5rem" style={{ marginTop: "50rem" }}>a</div>
       </article>
    </div>)
 
