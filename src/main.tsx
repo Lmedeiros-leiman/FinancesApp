@@ -25,6 +25,7 @@ export function App() {
 
   return (<>
     <GlobalContext.Provider value={{data, UpdateData}}  >
+      
       <Sidebar />
     </GlobalContext.Provider>
   </>)
