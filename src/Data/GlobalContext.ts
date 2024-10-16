@@ -4,7 +4,7 @@ import { Database, DatabaseStores } from "./Database";
 import MoneyConversionApi, { MoneyConversionApiResponse } from "./Apis/MoneyConversion";
 
 
-export const EmptyGlobalData: GlobalData = {
+const EmptyGlobalData: GlobalData = {
    Finances: [],
    FetchingFinanceData: true,
    //
@@ -69,7 +69,6 @@ export const useGlobalData = (): GlobalContext => {
 }
 //
 // context
-//
 export const GlobalContext = React.createContext<GlobalContext>({
    data: EmptyGlobalData,
    UpdateData: () => { console.warn("UpdateData called before context initialization.") }
@@ -77,7 +76,6 @@ export const GlobalContext = React.createContext<GlobalContext>({
 
 //
 // types
-// 
 export interface GlobalContext {
    data: GlobalData,
    UpdateData: React.Dispatch<React.SetStateAction<GlobalData>>
