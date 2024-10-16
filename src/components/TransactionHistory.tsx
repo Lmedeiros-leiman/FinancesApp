@@ -11,14 +11,11 @@ import { Skeleton } from "primereact/skeleton";
 
 export default function TransactionHistory() {
    const context = useContext(GlobalContext)
-   const loading = context.data.FetchingFinanceData
 
-   if (loading) {
+   if (context.data.FetchingFinanceData) {
       return (<>
          <div className="flex relative justify-content-center gap-3 flex-wrap py-2 px-1 w-full">
-            { Array(5).fill(0).map((_) => (
-               <PlaceholderCard />
-            ))}
+            { Array(5).fill(0).map((_,index) => <PlaceholderCard key={index} /> )}
          </div>
       </>)
    }
@@ -37,10 +34,8 @@ export default function TransactionHistory() {
 
 
    return (<div className="flex relative justify-content-center gap-3 flex-wrap py-2 px-1 w-full">
-         {orderedData.length > 0 && orderedData.map((transaction: Transaction) => (
-            <>
-               <TransactionCard transaction={transaction} key={transaction.id} />
-            </>
+         {orderedData.length > 0 && orderedData.map((transaction: Transaction, index) => (
+               <TransactionCard transaction={transaction} key={index} />
          ))}
       </div>)
 }
@@ -125,7 +120,7 @@ function EmptyHistory() {
 
 function PlaceholderCard() {
    return (<>
-      <Card className=" sm:col-4 col-12 shadow-4 p-1">
+      <Card className=" sm:col-4 col-12 shadow-4 p-1" >
          <article className="flex gap-3">
             <aside>
                <Skeleton className=" border-round-3xl h-3rem w-3rem mb-1" />
