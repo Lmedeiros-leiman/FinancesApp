@@ -6,12 +6,12 @@ import { GlobalDataContext, GlobalDataContextType } from "../Data/Contexts/Globa
 
 export default function Configuration() {
    const context = useContext(GlobalDataContext) as GlobalDataContextType;
-   const [selectedTheme, setSelectedTheme] = useState<string>( localStorage.getItem("theme") || "Nova");
+   const [selectedTheme, setSelectedTheme] = useState<string>( localStorage.getItem("theme") ?? "Nova");
    useEffect(() => {
       // ./node_modules/primereact/resources/themes/{ThemeFolder}/theme.css
-      const themeValue = AvailableThemes[selectedTheme as keyof typeof AvailableThemes];
+      const themeValue = AvailableThemes[selectedTheme as keyof typeof AvailableThemes] ?? "Nova";
 
-      localStorage.setItem("theme", selectedTheme); // saves theme in local storage
+      localStorage.setItem("theme", themeValue); // saves theme in local storage
       (document.getElementById("mainStyle") as HTMLLinkElement).href = `./node_modules/primereact/resources/themes/${themeValue}/theme.css`;
    },[selectedTheme]);
 
