@@ -17,13 +17,13 @@ export const TransactionHistory: React.FC = () => {
       setOrderedData(context.data.Finances.sort((a, b) => b.dateTime - a.dateTime))
    }, [context.data.Finances]);
 
-   /*
+   
    if (orderedData.length == 0) {
       return ( <div className="flex justify-content-center">
          <EmptyHistory />
       </div>)
    }
-   */
+   
 
    return (<>
       {
@@ -71,7 +71,8 @@ const TransactionCard: React.FC<{ transaction: Transaction }> = (props): JSX.Ele
             <h3 className={` font-bold ${textColor} m-0 mt-1`}>{formater.format(transaction.amount)}</h3>
          </section>
          <footer className=" flex sm:justify-content-start justify-content-end w-full sm:w-min sm:flex-column gap-1">
-            <Button severity="danger" disabled={busy} outlined onClick={async () => {
+            <Button icon="pi pi-trash"
+            severity="danger" disabled={busy} outlined onClick={async () => {
                setBusy(true)
                const db = await Database.getDB();
                const data = context.data.Finances
@@ -86,7 +87,6 @@ const TransactionCard: React.FC<{ transaction: Transaction }> = (props): JSX.Ele
 
                setBusy(false)
             }}>
-               <i className="pi pi-trash "></i>
             </Button>
          </footer>
       </article>);
