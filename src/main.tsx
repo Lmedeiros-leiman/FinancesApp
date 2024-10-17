@@ -8,6 +8,7 @@ import "./styles/main.css"
 import "primeflex/primeflex.min.css"
 import "primeicons/primeicons.css"
 import GlobalDataProvider from './Data/Contexts/GlobalDataContext.tsx'
+import { AvailableThemes } from './Data/Selections/AvailableThemes.ts'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -19,9 +20,8 @@ createRoot(document.getElementById('root')!).render(
 
 
 export function App() {
-
-  (document.getElementById("mainStyle") as HTMLLinkElement).href  = `./node_modules/primereact/resources/themes/${ localStorage.getItem("theme") || "saga-blue" }/theme.css`;
-
+  
+  (document.getElementById("mainStyle") as HTMLLinkElement).href = `./node_modules/primereact/resources/themes/${AvailableThemes[ localStorage.getItem("theme") as keyof typeof AvailableThemes ?? "Nova" ]}/theme.css`;
 
   return (<>
     <GlobalDataProvider>
