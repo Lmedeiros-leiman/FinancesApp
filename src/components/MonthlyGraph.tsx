@@ -1,10 +1,11 @@
 import { useContext, useEffect, useState } from "react"
-import { GlobalContext } from "../Data/GlobalContext"
 import { Chart } from "primereact/chart"
 import { Calendar } from "primereact/calendar"
 import { Card } from "primereact/card"
 import { FloatLabel } from "primereact/floatlabel"
 import "../styles/MonthlyGraph.css"
+import { GlobalDataContext, GlobalDataContextType } from "../Data/Contexts/GlobalDataContext"
+import { Skeleton } from "primereact/skeleton"
 
 type DataPoint = {
    labels: string[]
@@ -22,12 +23,9 @@ const chartOptions = {
    maintainAspectRatio: false,
 }
 
-export default function MonthlyGraph() {
-   const context = useContext(GlobalContext);
+export const MonthlyGraph: React.FC = () => {
+   const context = useContext(GlobalDataContext) as GlobalDataContextType;
 
-   if (context.data.FetchingFinanceData) {
-      return (<div>Loading...</div>)
-   }
    const pastDays = new Date();
    pastDays.setDate(pastDays.getDate() - 15)
    const [selectedTimeFrame, setSelectedTimeFrame] = useState<[Date, Date | null]>([
@@ -35,6 +33,7 @@ export default function MonthlyGraph() {
       new Date()
    ]);
    const [validData, setValidData] = useState<DataPoint | undefined>()
+
 
    useEffect(() => {
       if (selectedTimeFrame.length < 2) { return; }
@@ -102,23 +101,31 @@ export default function MonthlyGraph() {
          }]
       })
 
-   }, [selectedTimeFrame, context.data.Finances])
-   
-   return (<Card className=" shadow-3 MonthlyGraph">
-      <header >
-         <FloatLabel>
-            <Calendar
-               value={selectedTimeFrame}
-               selectionMode="range"
-               hideOnRangeSelection
-               variant="outlined"
-               onChange={(e) => { setSelectedTimeFrame(e.value as [Date, Date | null]) }}
-            />
-            <label>Time range</label>
-         </FloatLabel>
-      </header>
-         <Chart type="line" data={validData} options={chartOptions} />
-   </Card>
-   )
-}
+   }, [selectedTimeFrame, context.data.Finances]);
 
+
+   return (<>
+
+      <Card className=" shadow-3 MonthlyGraph">
+         <header >
+            <FloatLabel>
+               <Calendar
+                  value={selectedTimeFrame}
+                  selectionMode="range"
+                  hideOnRangeSelection
+                  variant="outlined"
+                  onChange={(e) => { setSelectedTimeFrame(e.value as [Date, Date | null]) }}
+               />
+               <label>Time range</label>
+            </FloatLabel>
+         </header>
+         {
+            validData ? <Chart type="line" data={validData} options={chartOptions} /> :
+            <div className="mt-2">
+               <Skeleton width="100%" height="5rem" />
+            </div>
+         }
+      </Card>
+      </>);
+};
+export default MonthlyGraph;
