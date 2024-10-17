@@ -9,7 +9,7 @@ import { GlobalDataContext, GlobalDataContextType } from "../Data/Contexts/Globa
 
 
 
-export const TransactionHistory : React.FC = () => {
+export const TransactionHistory: React.FC = () => {
    const context = useContext(GlobalDataContext) as GlobalDataContextType
 
    const [orderedData, setOrderedData] = useState<Transaction[]>(context.data.Finances);
@@ -17,36 +17,33 @@ export const TransactionHistory : React.FC = () => {
       setOrderedData(context.data.Finances.sort((a, b) => b.dateTime - a.dateTime))
    }, [context.data.Finances]);
 
+   /*
    if (orderedData.length == 0) {
       return ( <div className="flex justify-content-center">
          <EmptyHistory />
       </div>)
    }
-
-
+   */
 
    return (<>
-   {
-      context.data.FetchingFinanceData ? 
-         Array(5).fill(0).map((_,index) => <PlaceholderCard key={index} />) :
-         // shows the actual data
-         <div className="flex relative justify-content-center gap-3 flex-wrap py-2 px-1 w-full">
-         {orderedData.length > 0 && orderedData.map((transaction: Transaction, index) => (
-               <TransactionCard transaction={transaction} key={index} />
-         ))}
-         </div>
-   }
+      {
+         context.data.FetchingFinanceData ?
+            Array(5).fill(0).map((_, index) => <PlaceholderCard key={index} />) :
+            // shows the actual data
+            <div className="flex flex-grow-1 relative justify-content-center gap-2 flex-wrap  w-full">
+               {orderedData.length > 0 && orderedData.map((transaction: Transaction, index) => (
+                  <TransactionCard transaction={transaction} key={index} />
+               ))}
+            </div>
+      }
    </>);
 }
 export default TransactionHistory
 
-interface CardProps {
-   transaction: Transaction
-}
 
-function TransactionCard(props: CardProps) {
-   const [busy, setBusy] = useState(false)
-   const context = useContext(GlobalDataContext) as GlobalDataContextType
+const TransactionCard: React.FC<{ transaction: Transaction }> = (props): JSX.Element => {
+   const [busy, setBusy] = useState(false);
+   const context = useContext(GlobalDataContext) as GlobalDataContextType;
 
    const { transaction } = props;
    const formater = new Intl.NumberFormat(navigator.language, {
@@ -59,61 +56,46 @@ function TransactionCard(props: CardProps) {
    const icon = transaction.type == "Expense" ? "pi pi-send" : "pi pi-dollar"
    const transactionTime = new Date(transaction.dateTime)
 
-   return (<>
-      <Card className=" sm:col-4 col-12 shadow-4 p-1" key={transaction.id}>
-         <article className="flex flex-column justify-content-between xl:flex-row xl:align-items-start p-0 gap-3">
-            <div className="flex gap-3">
-               <header className="flex flex-column justify-content-start ">
-                  <i className={` ${icon} + ${backgroundColor} mx-auto border-round-3xl text-4xl p-2 h-3 w-max`}></i>
-                  
-                  <div> {transactionTime.toLocaleDateString()} </div>
-                  <div> {transactionTime.toLocaleTimeString()} </div>
-                  
-                  <span className="flex align-items-center align-content-center gap-2">
-                     <i className="pi pi-tag"></i>
-                     <span className="font-semibold">{transaction.category}</span>
-                  </span>
-                  
-               </header>
-               
-               <section className="flex flex-column flex-wrap justify-content-start text-justify gap-0">
-                  <h2 className="text-2xl font-bold text-900 flex-wrap m-0"> {transaction.title} </h2>
-                  <div className={` font-bold ${textColor}`}>{formater.format(transaction.amount)}</div>
-               </section>
+   return (
+      <article className="flex gap-1 flex-wrap surface-ground p-2 shadow-3 border-round">
+         <header className=" ">
+            <i className={`  ${icon} ${backgroundColor} mx-auto border-round-3xl text-4xl p-2 `} />
+            <div className="text-justify">
+               <div> {transactionTime.toLocaleDateString()} </div>
+               <div> {transactionTime.toLocaleTimeString()} </div>
             </div>
 
-            <footer className="flex sm:flex-column align-items-center sm:align-items-end mt-2 sm:mt-0">
-               
-               <Button severity="danger" disabled={busy} outlined onClick={ async () => {
-                  setBusy(true)
-                  const db = await Database.getDB();
-                  const data = context.data.Finances
+         </header>
+         <section className=" text-justify px-1 sm:w-22rem sm:max-w-22rem">
+            <h2 className={` m-0 max-w-20rem overflow-auto`}> {transaction.title} </h2>
+            <h3 className={` font-bold ${textColor} m-0 mt-1`}>{formater.format(transaction.amount)}</h3>
+         </section>
+         <footer className=" flex sm:justify-content-start justify-content-end w-full sm:w-min sm:flex-column gap-1">
+            <Button severity="danger" disabled={busy} outlined onClick={async () => {
+               setBusy(true)
+               const db = await Database.getDB();
+               const data = context.data.Finances
 
 
-                  db.delete(DatabaseStores.Finances, transaction.id)
-                  let indexToDelete = data.findIndex(t => t.id == transaction.id)
-                  context.UpdateData(prevData => ({
-                     ...prevData,
-                     Finances: data.filter( (_,index) => index !== indexToDelete)
-                     
-                  }));
-                  
+               db.delete(DatabaseStores.Finances, transaction.id)
+               let indexToDelete = data.findIndex(t => t.id == transaction.id)
+               context.UpdateData(prevData => ({
+                  ...prevData,
+                  Finances: data.filter((_, index) => index !== indexToDelete)
+               }));
 
-                  setBusy(false)
-               }}>
-                  <i className="pi pi-trash "></i>
-               </Button>
-            </footer>
-            
-         </article>
-      </Card>
-   </>)
-}
+               setBusy(false)
+            }}>
+               <i className="pi pi-trash "></i>
+            </Button>
+         </footer>
+      </article>);
+};
 
 function EmptyHistory() {
    return (<Card className=" max-w-20rem p-2 text-lg">
       <section className="mb-3">new transactions will appear here.</section>
-      <InputTransaction/>
+      <InputTransaction />
    </Card>)
 }
 
@@ -137,7 +119,7 @@ function PlaceholderCard() {
             <Skeleton className="w-5rem" />
             <Skeleton className="w-5rem" />
          </footer>
-         
+
       </Card>
    </>)
 }
