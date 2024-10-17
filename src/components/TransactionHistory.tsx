@@ -1,24 +1,16 @@
 import { useContext, useEffect, useState } from "react";
-import { GlobalContext } from "../Data/GlobalContext";
 import { Transaction } from "../Data/Types/Transaction";
 import { Card } from "primereact/card";
 import { Button } from "primereact/button";
 import { Database, DatabaseStores } from "../Data/Database";
 import InputTransaction from "./InputTransaction";
 import { Skeleton } from "primereact/skeleton";
+import { GlobalDataContext, GlobalDataContextType } from "../Data/Contexts/GlobalDataContext";
 
 
 
-export default function TransactionHistory() {
-   const context = useContext(GlobalContext)
-
-   if (context.data.FetchingFinanceData) {
-      return (<>
-         <div className="flex relative justify-content-center gap-3 flex-wrap py-2 px-1 w-full">
-            { Array(5).fill(0).map((_,index) => <PlaceholderCard key={index} /> )}
-         </div>
-      </>)
-   }
+export const TransactionHistory : React.FC = () => {
+   const context = useContext(GlobalDataContext) as GlobalDataContextType
 
    const [orderedData, setOrderedData] = useState<Transaction[]>(context.data.Finances);
    useEffect(() => {
@@ -33,13 +25,20 @@ export default function TransactionHistory() {
 
 
 
-   return (<div className="flex relative justify-content-center gap-3 flex-wrap py-2 px-1 w-full">
+   return (<>
+   {
+      context.data.FetchingFinanceData ? 
+         Array(5).fill(0).map((_,index) => <PlaceholderCard key={index} />) :
+         // shows the actual data
+         <div className="flex relative justify-content-center gap-3 flex-wrap py-2 px-1 w-full">
          {orderedData.length > 0 && orderedData.map((transaction: Transaction, index) => (
                <TransactionCard transaction={transaction} key={index} />
          ))}
-      </div>)
+         </div>
+   }
+   </>);
 }
-
+export default TransactionHistory
 
 interface CardProps {
    transaction: Transaction
@@ -47,7 +46,7 @@ interface CardProps {
 
 function TransactionCard(props: CardProps) {
    const [busy, setBusy] = useState(false)
-   const context = useContext(GlobalContext)
+   const context = useContext(GlobalDataContext) as GlobalDataContextType
 
    const { transaction } = props;
    const formater = new Intl.NumberFormat(navigator.language, {
