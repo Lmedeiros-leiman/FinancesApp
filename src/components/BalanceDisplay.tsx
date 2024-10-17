@@ -1,9 +1,9 @@
 import { useContext, useEffect, useState } from "react"
-import { GlobalContext } from "../Data/GlobalContext"
 import { InputText } from "primereact/inputtext"
 import { Button } from "primereact/button"
 import "../styles/BalanceDisplay.css"
 import { Skeleton } from "primereact/skeleton"
+import { GlobalDataContext, GlobalDataContextType } from "../Data/Contexts/GlobalDataContext"
 
 
 
@@ -15,7 +15,7 @@ export default function BalanceDisplay() {
    
    const [hidden, setHidden] = useState(false)
    const [savedValue, setSavedValue] = useState( "Loading..." )
-   const data = useContext(GlobalContext)
+   const data = useContext(GlobalDataContext) as GlobalDataContextType
 
    useEffect( () => {
       // gets the balance until today and shows it.

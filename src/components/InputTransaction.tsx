@@ -9,11 +9,11 @@ import { FloatLabel } from "primereact/floatlabel";
 import { InputNumber } from "primereact/inputnumber";
 import { Dropdown } from "primereact/dropdown";
 import { IconList, TransactionType, TransactionTypes } from "../Data/Selections/TransactionTypes";
-import { GlobalContext } from "../Data/GlobalContext";
+import { GlobalDataContext, GlobalDataContextType } from "../Data/Contexts/GlobalDataContext";
 import "../styles/InputTransaction.css";
 
 export default function InputTransaction() {
-   const context = useContext(GlobalContext)
+   const context = useContext(GlobalDataContext) as GlobalDataContextType
    const [open, setOpen] = useState(false);
    const [newTransaction, setNewTransaction] = useState<Transaction>({
       title: "",

@@ -2,10 +2,10 @@ import { Dropdown } from "primereact/dropdown";
 import { AvailableThemes } from "../Data/Selections/AvailableThemes";
 import { useContext, useEffect, useState } from "react";
 import { FloatLabel } from "primereact/floatlabel";
-import { GlobalContext } from "../Data/GlobalContext";
+import { GlobalDataContext, GlobalDataContextType } from "../Data/Contexts/GlobalDataContext";
 
 export default function Configuration() {
-   const context = useContext(GlobalContext);
+   const context = useContext(GlobalDataContext) as GlobalDataContextType;
    const [selectedTheme, setSelectedTheme] = useState<string>( localStorage.getItem("theme") || "Nova");
    useEffect(() => {
       // ./node_modules/primereact/resources/themes/{ThemeFolder}/theme.css
