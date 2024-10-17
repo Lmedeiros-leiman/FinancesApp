@@ -19,9 +19,6 @@ type DataPoint = {
    }[];
 }
 
-const chartOptions = {
-   maintainAspectRatio: false,
-}
 
 export const MonthlyGraph: React.FC = () => {
    const context = useContext(GlobalDataContext) as GlobalDataContextType;
@@ -106,7 +103,7 @@ export const MonthlyGraph: React.FC = () => {
 
    return (<>
 
-      <Card className=" shadow-3 MonthlyGraph">
+      <Card className=" shadow-3 w-full">
          <header >
             <FloatLabel>
                <Calendar
@@ -119,12 +116,16 @@ export const MonthlyGraph: React.FC = () => {
                <label>Time range</label>
             </FloatLabel>
          </header>
+         <section className="w-full ">
          {
-            validData ? <Chart type="line" data={validData} options={chartOptions} /> :
+            validData ? 
+            <Chart type="line" data={validData} options={{maintainAspectRatio: false}} /> :
+            
             <div className="mt-2">
                <Skeleton width="100%" height="5rem" />
             </div>
          }
+         </section>
       </Card>
       </>);
 };
