@@ -1,6 +1,6 @@
 import InputTransaction from "../components/InputTransaction";
 import MonthlyGraph from "../components/MonthlyGraph";
-import TransactionHistory from "../components/TransactionHistory";
+import TransactionHistory from "../components/TransactionsHistory/TransactionHistory";
 import BalanceDisplay from "../components/BalanceDisplay";
 
 
