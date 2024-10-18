@@ -1,8 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { Transaction } from "../../Data/Types/Transaction";
 import { Card } from "primereact/card";
-import { Button } from "primereact/button";
-import { Database, DatabaseStores } from "../../Data/Database";
 import InputTransaction from "../InputTransaction";
 import { Skeleton } from "primereact/skeleton";
 import { GlobalDataContext, GlobalDataContextType } from "../../Data/Contexts/GlobalDataContext";
