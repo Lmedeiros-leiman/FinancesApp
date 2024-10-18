@@ -9,10 +9,10 @@ export default function Configuration() {
    const [selectedTheme, setSelectedTheme] = useState<string>( localStorage.getItem("theme") ||"Nova");
    useEffect(() => {
       // ./node_modules/primereact/resources/themes/{ThemeFolder}/theme.css
-      const themeValue = AvailableThemes[selectedTheme as keyof typeof AvailableThemes];
-      console.log(selectedTheme)
-      localStorage.setItem("theme", selectedTheme); // saves theme in local storage
-      (document.getElementById("mainStyle") as HTMLLinkElement).href = `./node_modules/primereact/resources/themes/${themeValue}/theme.css`;
+      //const themeValue = AvailableThemes[selectedTheme as keyof typeof AvailableThemes];
+      //console.log(selectedTheme)
+      //localStorage.setItem("theme", selectedTheme); // saves theme in local storage
+      //(document.getElementById("mainStyle") as HTMLLinkElement).href = `./node_modules/primereact/resources/themes/${themeValue}/theme.css`;
    },[selectedTheme]);
    
 
