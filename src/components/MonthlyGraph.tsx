@@ -3,7 +3,6 @@ import { Chart } from "primereact/chart"
 import { Calendar } from "primereact/calendar"
 import { Card } from "primereact/card"
 import { FloatLabel } from "primereact/floatlabel"
-import "../styles/MonthlyGraph.css"
 import { GlobalDataContext, GlobalDataContextType } from "../Data/Contexts/GlobalDataContext"
 import { Skeleton } from "primereact/skeleton"
 

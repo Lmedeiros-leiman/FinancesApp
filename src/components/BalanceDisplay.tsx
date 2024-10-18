@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from "react"
 import { InputText } from "primereact/inputtext"
 import { Button } from "primereact/button"
-import "../styles/BalanceDisplay.css"
 import { Skeleton } from "primereact/skeleton"
 import { GlobalDataContext, GlobalDataContextType } from "../Data/Contexts/GlobalDataContext"
 

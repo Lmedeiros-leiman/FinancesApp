@@ -4,3 +4,22 @@ body,html {
    padding: 0;
    margin: 0;
 }
+
+.hiddenIcon  .p-dropdown-trigger {
+   display: none;
+}
+
+.red input.p-inputnumber-input.p-inputtext.p-component.p-filled{
+   color: var(--red-400) ;
+   border: none;
+}
+.green input.p-inputnumber-input.p-inputtext.p-component.p-filled{
+   color: var(--green-400);
+   border: none;
+}
+
+.borderless input.p-inputtext.p-component.p-inputtext.p-component {
+   border: none !important;
+   text-align: end;
+   color: var(--text-color-secondary);
+}

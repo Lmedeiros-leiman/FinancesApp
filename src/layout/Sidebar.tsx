@@ -2,7 +2,6 @@ import { Button } from "primereact/button";
 import Home from "../pages/Home";
 import { useState } from "react";
 import Configuration from "../pages/Configuration";
-import "../styles/Sidebar.css"
 
 
 const Pages: { [key: string]: JSX.Element } = {
