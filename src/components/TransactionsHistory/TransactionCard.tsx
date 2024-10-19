@@ -5,7 +5,7 @@ import { Database, DatabaseStores } from "../../Data/Database";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { Dropdown } from "primereact/dropdown";
-import { ValidCurrencies } from "../../Data/Selections/ValidCurrencies";
+import { ValidCurrencies } from "../../Data/Selections/CurrenciesByLocales";
 import { InputNumber } from "primereact/inputnumber";
 import { Calendar } from "primereact/calendar";
 

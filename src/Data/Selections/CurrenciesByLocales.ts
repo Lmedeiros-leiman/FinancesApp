@@ -1,4 +1,4 @@
-export const ValidCurrencies : { [key: string]: string } = {
+export const CurrenciesByLocales : { [key: string]: string } = {
    "ADA" : "ADA",
    "AED" : "AED",
    "AFN" : "AFN",
@@ -180,3 +180,4 @@ export const ValidCurrencies : { [key: string]: string } = {
    "ZMW" : "ZMW",
    "ZWL" : "ZWL"
 }
+

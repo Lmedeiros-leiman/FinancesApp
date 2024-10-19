@@ -13,8 +13,10 @@ const GlobalDataProvider : React.FC<{children: React.ReactNode}> = ({ children }
       Exchange: undefined,
       FetchingExchangeData: true,
       User:{
-         IsMobile: true
+         IsMobile: true,
+         BaseCurrency: "USD",
       }
+
    });
 
    //
@@ -66,6 +68,7 @@ const GlobalDataProvider : React.FC<{children: React.ReactNode}> = ({ children }
             ChangeData((PrevData) => ({
                ...PrevData,
                User: {
+                  ...PrevData.User,
                   IsMobile: false
                }
             }));
@@ -105,6 +108,7 @@ export interface IGlobalData {
    Exchange: MoneyConversionApiResponse | undefined
    FetchingExchangeData: boolean
    User: UserType
+   
 }
 export type GlobalDataContextType = {
    data: IGlobalData
@@ -113,4 +117,5 @@ export type GlobalDataContextType = {
 
 export type UserType = {
    IsMobile : boolean
+   BaseCurrency : string
 }
