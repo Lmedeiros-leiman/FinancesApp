@@ -20,7 +20,7 @@ createRoot(document.getElementById('root')!).render(
 
 
 export function App() {
-  
+  console.log(document.getElementById("mainStyle"))
   //document.getElementById("mainStyle").href = `./node_modules/primereact/resources/themes/${AvailableThemes[ localStorage.getItem("theme") as keyof typeof AvailableThemes ?? "Nova" ]}/theme.css`;
 
   return (<>
