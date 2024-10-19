@@ -7,7 +7,7 @@ import BalanceDisplay from "../components/BalanceDisplay";
 export default function Home() {
    return (<main className="relative w-full">
       
-      <nav className="mt-1 mb-2 mx-1 mt-2 shadow-4 py-1 px-2 surface-ground border-round">
+      <nav className=" mb-3 p-2 surface-ground shadow-3 w-full ">
          <div className=" flex justify-content-between align-content-center align-items-center">
             <BalanceDisplay />
             <InputTransaction/>
