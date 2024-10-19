@@ -11,7 +11,7 @@
       link.id = "mainStyle";
       link.rel = "stylesheet";
       link.type = "text/css";
-      const userTheme = localStorage.getItem("theme").replace(" ","-").toLowerCase() || "nova";
+      const userTheme = localStorage.getItem("theme") ? localStorage.getItem("theme").replace(" ","-").toLowerCase() : "nova"
       link.href = "./node_modules/primereact/resources/themes/"+userTheme+"/theme.css";
       document.head.appendChild(link);
     </script>
