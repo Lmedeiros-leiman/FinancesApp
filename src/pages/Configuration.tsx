@@ -1,7 +1,4 @@
-import { Dropdown } from "primereact/dropdown";
-import { AvailableThemes } from "../Data/Selections/AvailableThemes";
-import { useContext, useEffect, useState } from "react";
-import { FloatLabel } from "primereact/floatlabel";
+import { useContext } from "react";
 import { GlobalDataContext, GlobalDataContextType } from "../Data/Contexts/GlobalDataContext";
 import ThemePicker from "../components/Configurables/ThemePicker";
 
