@@ -3,9 +3,18 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <link id="mainStyle" type="text/css" rel="stylesheet" href="./node_modules/primereact/resources/themes/saga-blue/theme.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Finances App</title>
+    <script>
+      // creates a theme element and directs it to the user favorite theme.
+      let link = document.createElement("link");
+      link.id = "mainStyle";
+      link.rel = "stylesheet";
+      link.type = "text/css";
+      const userTheme = localStorage.getItem("theme").replace(" ","-").toLowerCase() || "nova";
+      link.href = "./node_modules/primereact/resources/themes/"+userTheme+"/theme.css";
+      document.head.appendChild(link);
+    </script>
   </head>
   <body class="surface-200">
     <div id="root"></div>
