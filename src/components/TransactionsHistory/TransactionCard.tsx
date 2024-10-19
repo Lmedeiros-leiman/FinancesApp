@@ -39,32 +39,37 @@ const TransactionCard: React.FC<{ transaction: Transaction }> = (props): JSX.Ele
 
    return (
       <article className="flex gap-1 flex-wrap max-w-29rem surface-ground p-2 shadow-3 border-round-2xl">
+         
          <header className="text-justify flex ">
             <i className={` ${icon} ${backgroundColor} align-content-center border-round-3xl text-4xl p-2 `} />
          </header>
-         <section className=" text-justify px-1 sm:w-22rem sm:max-w-22rem">
-            <InputText value={transactionData.title} className="border-none text-xl"
+         <section className=" text-justify px-1  sm:w-22rem sm:max-w-22rem">
+            <InputText value={transactionData.title} 
+               className="border-none text-xl surface-ground"
                onChange={(e) => {
                   setTransactionData(prevData => ({ ...prevData, title: e.target.value }));
                }}
                onBlur={HandleBlur}
             />
             <div>
-               <Dropdown options={Object.keys(ValidCurrencies)}
+               <Dropdown  options={Object.keys(ValidCurrencies)}
                   filter value={transactionData.ammountType}
-                  className="border-0 hiddenIcon "
+                  className="hidden-input"
                   onChange={(e) => {
                      setTransactionData(prevData => ({ ...prevData, ammountType: e.value }));
                   }}
                   onBlur={HandleBlur}
                />
-               <InputNumber className={` border-none ml-1 p-0 text-lg ${textColor}`}
+               <InputNumber className={` hidden-input m-1 p-0 text-lg ${textColor} `}
                   defaultValue={0}
                   value={transactionData.amount} minFractionDigits={0} maxFractionDigits={20}
                   onBlur={HandleBlur}
                   onChange={(e) => {
                      setBusy(true)
-                     setTransactionData(prevData => ({ ...prevData, amount: e.value as number }));
+                     setTransactionData(prevData => ({ 
+                        ...prevData, 
+                        type: transactionData.amount < 0 ? "Expense" : "Income",
+                        amount: e.value as number }));
                      setBusy(false)
                   }}
                />
@@ -103,7 +108,7 @@ const TransactionCard: React.FC<{ transaction: Transaction }> = (props): JSX.Ele
                         setBusy(false);
                      }}
                      onBlur={HandleBlur}
-                     className="borderless text-color-secondary" showTime
+                     className="hidden-input" showTime
                      value={transactionDataTime}
 
                   />

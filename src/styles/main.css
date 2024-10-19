@@ -5,8 +5,22 @@ body,html {
    margin: 0;
 }
 
-.hiddenIcon  .p-dropdown-trigger {
+.hidden-input  .p-dropdown-trigger {
    display: none;
+}
+
+.hidden-input input.p-inputnumber-input.p-inputtext.p-component.p-filled,
+.hidden-input input.p-inputtext.p-component.p-inputtext.p-component,
+.hidden-input span.p-dropdown-label.p-inputtext,
+.hidden-input{
+   background-color: var(--surface-ground);
+   border: none;
+   outline: none;
+}
+
+.hidden-input.p-calendar input.p-inputtext.p-component.p-inputtext.p-component{
+   text-align: end;
+   color: var(--text-color-secondary);
 }
 
 .red input.p-inputnumber-input.p-inputtext.p-component.p-filled{
@@ -16,10 +30,4 @@ body,html {
 .green input.p-inputnumber-input.p-inputtext.p-component.p-filled{
    color: var(--green-400);
    border: none;
-}
-
-.borderless input.p-inputtext.p-component.p-inputtext.p-component {
-   border: none !important;
-   text-align: end;
-   color: var(--text-color-secondary);
 }
