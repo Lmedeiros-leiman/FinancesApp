@@ -11,7 +11,10 @@ const GlobalDataProvider : React.FC<{children: React.ReactNode}> = ({ children }
       Finances: [],
       FetchingFinanceData: true,
       Exchange: undefined,
-      FetchingExchangeData: true
+      FetchingExchangeData: true,
+      User:{
+         IsMobile: true
+      }
    });
 
    //
@@ -53,6 +56,21 @@ const GlobalDataProvider : React.FC<{children: React.ReactNode}> = ({ children }
       }
    }
 
+   const detectMobile = async () => {
+
+      if ( 
+         navigator.userAgent.match(/Windows/i) ||
+         navigator.userAgent.match(/Linux/i) ||
+         navigator.userAgent.match(/Mac OS/i)
+         ){
+            ChangeData((PrevData) => ({
+               ...PrevData,
+               User: {
+                  IsMobile: false
+               }
+            }));
+         }
+   }
 
    //
    //
@@ -60,6 +78,7 @@ const GlobalDataProvider : React.FC<{children: React.ReactNode}> = ({ children }
       Promise.all([
          FetchFinancesData(),
          FetchCurenciesApiData(),
+         detectMobile(),
       ]);
    },[]);
 
@@ -85,9 +104,13 @@ export interface IGlobalData {
    FetchingFinanceData: boolean
    Exchange: MoneyConversionApiResponse | undefined
    FetchingExchangeData: boolean
+   User: UserType
 }
-
 export type GlobalDataContextType = {
    data: IGlobalData
    UpdateData: React.Dispatch<React.SetStateAction<IGlobalData>>
+}
+
+export type UserType = {
+   IsMobile : boolean
 }

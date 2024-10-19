@@ -105,7 +105,7 @@ export const MonthlyGraph: React.FC = () => {
       <Card className=" shadow-3 w-full">
          <header >
             <FloatLabel>
-               <Calendar
+               <Calendar touchUI={context.data.User.IsMobile}
                   value={selectedTimeFrame}
                   selectionMode="range"
                   hideOnRangeSelection

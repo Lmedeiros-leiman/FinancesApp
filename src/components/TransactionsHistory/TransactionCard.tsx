@@ -93,7 +93,7 @@ const TransactionCard: React.FC<{ transaction: Transaction }> = (props): JSX.Ele
          <footer className="w-full flex">
             <div className="flex w-full justify-content-end pr-2 text-color-secondary">
                <span>
-                  <Calendar
+                  <Calendar touchUI={context.data.User.IsMobile}
                      onChange={(e) => {
                         setBusy(true);
                         console.log((e.value))

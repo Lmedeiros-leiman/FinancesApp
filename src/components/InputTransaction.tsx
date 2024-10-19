@@ -129,7 +129,8 @@ export default function InputTransaction() {
                <label>Transaction Amount</label>
             </FloatLabel>
             <FloatLabel className="mb-4">
-               <Calendar value={new Date(newTransaction.dateTime)} showTime hourFormat="12" required
+               <Calendar touchUI={context.data.User.IsMobile}
+                  value={new Date(newTransaction.dateTime)} showTime hourFormat="12" required
                   onChange={(e) => {
                      if (e.value != null && e.value != undefined) {
                         setNewTransaction({ ...newTransaction, dateTime: e.value.getTime() })
