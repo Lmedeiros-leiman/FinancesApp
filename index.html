@@ -7,8 +7,7 @@
     <title>Finances App</title>
     <script>
       // creates a theme element and directs it to the user favorite theme.
-      const link=document.createElement("link");link.id="mainStyle",link.rel="stylesheet",link.type="text/css",link.href=`./styles/${localStorage.getItem("theme")?.replace(" ","-").toLowerCase()??"nova"}/theme.css`,document.head.appendChild(link);
-
+      const link=document.createElement("link");link.id="mainStyle",link.rel="stylesheet",link.type="text/css",link.href=`./styles/${localStorage.getItem("theme")?.replaceAll(" ","-").toLowerCase()??"nova"}/theme.css`,document.head.appendChild(link);
     </script>
   </head>
   <body class="surface-200">
