@@ -12,7 +12,7 @@
       link.rel = "stylesheet";
       link.type = "text/css";
       const userTheme = localStorage.getItem("theme") ? localStorage.getItem("theme").replace(" ","-").toLowerCase() : "nova"
-      link.href = "./node_modules/primereact/resources/themes/"+userTheme+"/theme.css";
+      link.href = "./styles/"+userTheme+"/theme.css";
       document.head.appendChild(link);
     </script>
   </head>
