@@ -2,8 +2,9 @@
 // uses ts money to handle the rest.
 // https://api.fxratesapi.com/latest
 
+import { useContext } from "react";
 import CacheStorage from "../Cache/CacheStorage";
-import { Currency } from "../Contexts/GlobalDataContext";
+import { Currency, GlobalDataContext, GlobalDataContextType } from "../Contexts/GlobalDataContext";
 
 export interface MoneyConversionApiResponse {
    success: boolean;
@@ -20,40 +21,28 @@ export interface MoneyConversionApiValidCurrencies {
 
 export default class MoneyConversionApi {
 
-   public static async getLatestRates() {
+   public static async getLatestRates(Base: string = "USD") {
       // gets the cached exchange rates.
-      const cachedRates = localStorage.getItem("rates");
-      if (cachedRates) {
-         const cachedData = JSON.parse(cachedRates) as MoneyConversionApiResponse;
-         if ( new Date().getTime() > (cachedData.timestamp + 1000 * 60 * 8) ) {
-            // if the cached data is older than 8 minutes, fetch a new one.
-            console.log("Fetching cached exchange rates...");
-            return cachedData;
+      let data = await(await CacheStorage.get("rates", `https://api.fxratesapi.com/latest?base=${Base}`))?.json() as MoneyConversionApiResponse;
+      
+      if (data == undefined) {
+         data = await (await fetch(`https://api.fxratesapi.com/latest?base=${Base}`)).json() as MoneyConversionApiResponse;
+
+         if (data.success == false) {
+            // we probably reached the rate limit.
+            console.error("Failure trying to get exchange rates");
+            console.log(data);
+            return undefined;
          }
+
+         // changes the timestamps to the specific minute the request was made.
+         data.timestamp = new Date().getTime();
+         data.date = new Date().toISOString();
+
+         // 8 minutes cache.
+         CacheStorage.add("rates", `https://api.fxratesapi.com/latest?base=${Base}`, data, 60 * 8);
       }
-
-
-      // Fetches data from the api.
-      return await this.getExchangeRates();
-   }
-   private static async getExchangeRates(Base: string = 'USD') {
-      const response = await fetch(`https://api.fxratesapi.com/latest?base=${Base}`);
-      const data = await response.json() as MoneyConversionApiResponse;
-
       
-      if (data.success == false) {
-         // we probably reached the rate limit.
-         console.error("Failure trying to get exchange rates");
-         console.log(data);
-         return undefined;
-      }
-
-      // changes the timestamps to the specific minute the request was made.
-      data.timestamp = new Date().getTime();
-      data.date = new Date().toISOString();
-      
-      // caches it.
-      localStorage.setItem("rates", JSON.stringify(data));
       return data;
    }
 
@@ -62,9 +51,20 @@ export default class MoneyConversionApi {
       
       if (data == undefined) {
          data = await (await fetch("https://api.fxratesapi.com/currencies")).json() as MoneyConversionApiValidCurrencies;
-         CacheStorage.add("currencies", "https://api.fxratesapi.com/currencies", data);
+         CacheStorage.add("currencies", "https://api.fxratesapi.com/currencies", data, 60 * 60 * 24 * 30);
       }
 
       return data as MoneyConversionApiValidCurrencies
+   }
+
+   public static async convert(from: Currency, to: Currency) {
+      let context = useContext(GlobalDataContext) as GlobalDataContextType;
+      while(context.data.FetchingExchangeData || context.data.Exchange == undefined) { 
+         await new Promise(resolve => setTimeout(resolve, 10));
+      }
+      let data = context.data.Exchange;
+      if (data.base) {
+
+      }
    }
 }

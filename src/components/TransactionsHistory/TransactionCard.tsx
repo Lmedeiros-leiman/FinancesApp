@@ -5,7 +5,6 @@ import { Database, DatabaseStores } from "../../Data/Database";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { Dropdown } from "primereact/dropdown";
-import { ValidCurrencies } from "../../Data/Selections/CurrenciesByLocales";
 import { InputNumber } from "primereact/inputnumber";
 import { Calendar } from "primereact/calendar";
 
@@ -15,6 +14,7 @@ const TransactionCard: React.FC<{ transaction: Transaction }> = (props): JSX.Ele
    const [transactionData, setTransactionData] = useState(props.transaction);
    const context = useContext(GlobalDataContext) as GlobalDataContextType;
 
+   const ValidCurrencies = [{"ABC":"ABC","DEF":"DEF"}]
 
    const backgroundColor = transactionData.type == "Expense" ? "bg-red-200" : "bg-green-200"
    const textColor = transactionData.type == "Expense" ? "red" : "green"
