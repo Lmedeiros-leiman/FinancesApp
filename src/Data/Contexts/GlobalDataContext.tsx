@@ -93,7 +93,7 @@ const GlobalDataProvider : React.FC<{children: React.ReactNode}> = ({ children }
             // fetches data from the public folder.
             console.log("Fetching user locale data from the web...");
             const data = await (await fetch(`./locales/${userLocale}/currency.json`)).json();
-            CacheStorage.add("UserCurrency",`./locales/${userLocale}/currency.json`,data);
+            CacheStorage.add("UserCurrency",`./locales/${userLocale}/currency.json`,data, 60 * 60 * 24 * 30);
 
          } catch(error) {
             console.log("Something went wrong.")
