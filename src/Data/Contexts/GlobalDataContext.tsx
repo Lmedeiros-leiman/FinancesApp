@@ -2,6 +2,7 @@ import { createContext, useEffect, useState } from "react";
 import MoneyConversionApi, { MoneyConversionApiResponse } from "../Apis/MoneyConversion";
 import { Transaction } from "../Types/Transaction";
 import { Database, DatabaseStores } from "../Database";
+import CacheStorage from "../Cache/CacheStorage";
 
 export const GlobalDataContext = createContext<GlobalDataContextType | null>(null);
 
@@ -12,9 +13,10 @@ const GlobalDataProvider : React.FC<{children: React.ReactNode}> = ({ children }
       FetchingFinanceData: true,
       Exchange: undefined,
       FetchingExchangeData: true,
+      ValidCurrencies: {},
       User:{
          IsMobile: true,
-         BaseCurrency: "USD",
+         BaseCurrency: undefined,
       }
 
    });
@@ -24,7 +26,7 @@ const GlobalDataProvider : React.FC<{children: React.ReactNode}> = ({ children }
 
    // fetches exchange data from the api or localstorage.
    const FetchCurenciesApiData = async () => {
-      const data = await new MoneyConversionApi().getLatestRates()
+      const data = await MoneyConversionApi.getLatestRates()
       ChangeData((PrevData) => ({
          ...PrevData,
          Exchange: data,
@@ -57,7 +59,14 @@ const GlobalDataProvider : React.FC<{children: React.ReactNode}> = ({ children }
          console.error("Failed to fetch finance data.");
       }
    }
+   const FetchValidCurrencies = async () => {
+      const data = await MoneyConversionApi.getValidCurrencies();
+      ChangeData((PrevData) => ({
+         ...PrevData,
+         ValidCurrencies: data,
+      }));
 
+   }
    const detectMobile = async () => {
 
       if ( 
@@ -74,6 +83,34 @@ const GlobalDataProvider : React.FC<{children: React.ReactNode}> = ({ children }
             }));
          }
    }
+   const DetectUserCurrency = async () => {
+      const userLocale = navigator.language;
+      
+      let data = await (await CacheStorage.get("UserCurrency", `./locales/${userLocale}/currency.json`) )?.json();
+      // we attempt to fetch the data from the cache first, if its not present we fetch it from the web.
+      if (!data) {
+         try {
+            // fetches data from the public folder.
+            console.log("Fetching user locale data from the web...");
+            const data = await (await fetch(`./locales/${userLocale}/currency.json`)).json();
+            CacheStorage.add("UserCurrency",`./locales/${userLocale}/currency.json`,data);
+
+         } catch(error) {
+            console.log("Something went wrong.")
+            console.error(error)
+         }
+
+      }
+
+      ChangeData((PrevData) => ({
+         ...PrevData,
+         User: {
+            ...PrevData.User,
+            BaseCurrency: data
+         }
+      }));
+
+   }
 
    //
    //
@@ -82,6 +119,8 @@ const GlobalDataProvider : React.FC<{children: React.ReactNode}> = ({ children }
          FetchFinancesData(),
          FetchCurenciesApiData(),
          detectMobile(),
+         DetectUserCurrency(),
+         FetchValidCurrencies()
       ]);
    },[]);
 
@@ -95,8 +134,6 @@ const GlobalDataProvider : React.FC<{children: React.ReactNode}> = ({ children }
 export default GlobalDataProvider
 
 
-//
-
 
 
 //
@@ -107,8 +144,9 @@ export interface IGlobalData {
    FetchingFinanceData: boolean
    Exchange: MoneyConversionApiResponse | undefined
    FetchingExchangeData: boolean
+   ValidCurrencies: {[code: string]: Currency},
    User: UserType
-   
+
 }
 export type GlobalDataContextType = {
    data: IGlobalData
@@ -117,5 +155,15 @@ export type GlobalDataContextType = {
 
 export type UserType = {
    IsMobile : boolean
-   BaseCurrency : string
+   BaseCurrency : Currency | undefined
+}
+
+export type Currency = {
+   code : string,
+   name : string,
+   decimal_digits : number,
+   name_plural : string,
+   rounding : number,
+   symbol : string,
+   symbol_native : string
 }

@@ -2,6 +2,9 @@
 // uses ts money to handle the rest.
 // https://api.fxratesapi.com/latest
 
+import CacheStorage from "../Cache/CacheStorage";
+import { Currency } from "../Contexts/GlobalDataContext";
+
 export interface MoneyConversionApiResponse {
    success: boolean;
    terms: string;
@@ -11,11 +14,13 @@ export interface MoneyConversionApiResponse {
    base: string;
    rates: { [key: string] : number };
  }
-
+export interface MoneyConversionApiValidCurrencies {
+   [code: string]: Currency;
+}
 
 export default class MoneyConversionApi {
 
-   public async getLatestRates() {
+   public static async getLatestRates() {
       // gets the cached exchange rates.
       const cachedRates = localStorage.getItem("rates");
       if (cachedRates) {
@@ -31,7 +36,7 @@ export default class MoneyConversionApi {
       // Fetches data from the api.
       return await this.getExchangeRates();
    }
-   private async getExchangeRates(Base: string = 'USD') {
+   private static async getExchangeRates(Base: string = 'USD') {
       const response = await fetch(`https://api.fxratesapi.com/latest?base=${Base}`);
       const data = await response.json() as MoneyConversionApiResponse;
 
@@ -50,5 +55,16 @@ export default class MoneyConversionApi {
       // caches it.
       localStorage.setItem("rates", JSON.stringify(data));
       return data;
+   }
+
+   public static async getValidCurrencies() {
+      let data = await (await CacheStorage.get("currencies", "https://api.fxratesapi.com/currencies"))?.json();
+      
+      if (data == undefined) {
+         data = await (await fetch("https://api.fxratesapi.com/currencies")).json() as MoneyConversionApiValidCurrencies;
+         CacheStorage.add("currencies", "https://api.fxratesapi.com/currencies", data);
+      }
+
+      return data as MoneyConversionApiValidCurrencies
    }
 }
