@@ -7,14 +7,18 @@ import { GlobalDataContext, GlobalDataContextType } from "../Data/Contexts/Globa
 
 
 export default function BalanceDisplay() {
+   return(<>BEING REWORKED.</>)
+   const context = useContext(GlobalDataContext) as GlobalDataContextType
    const formater = new Intl.NumberFormat( navigator.language , {
       currency: "USD",
       style: "currency"
-   })
+   });
    
+   const UserCurrency = context.data.User.BaseCurrency
+
    const [hidden, setHidden] = useState(false)
    const [savedValue, setSavedValue] = useState( "Loading..." )
-   const data = useContext(GlobalDataContext) as GlobalDataContextType
+   
 
    useEffect( () => {
       // gets the balance until today and shows it.
@@ -25,7 +29,8 @@ export default function BalanceDisplay() {
 
 
    if (data.data.FetchingFinanceData) {
-      return (<span className="flex gap-1">
+      return (
+      <span className="flex gap-1">
          <Skeleton className="w-10rem h-2rem"/>
          <Skeleton className="w-2rem h-2rem"/>
       </span>)
