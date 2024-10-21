@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from "react";
-import MoneyConversionApi, { MoneyConversionApiResponse } from "../Apis/MoneyConversion";
+import MoneyConversionApi, { MoneyConversionApiResponse } from "../Apis/CurrencyRatesApi";
 import { Transaction } from "../Types/Transaction";
 import { Database, DatabaseStores } from "../Database";
 import CacheStorage from "../Cache/CacheStorage";
@@ -26,7 +26,8 @@ const GlobalDataProvider : React.FC<{children: React.ReactNode}> = ({ children }
 
    // fetches exchange data from the api or localstorage.
    const FetchCurenciesApiData = async () => {
-      const data = await MoneyConversionApi.getLatestRates()
+      const data = await MoneyConversionApi.getLatestRates();
+
       ChangeData((PrevData) => ({
          ...PrevData,
          Exchange: data,
@@ -84,9 +85,9 @@ const GlobalDataProvider : React.FC<{children: React.ReactNode}> = ({ children }
          }
    }
    const DetectUserCurrency = async () => {
-      const userLocale = navigator.language;
+      const userLocale = navigator.language || "en-US";
       
-      let data = await (await CacheStorage.get("UserCurrency", `./locales/${userLocale}/currency.json`) )?.json();
+      let data = await CacheStorage.get("UserCurrency", `./locales/${userLocale}/currency.json`);
       // we attempt to fetch the data from the cache first, if its not present we fetch it from the web.
       if (!data) {
          try {
@@ -140,12 +141,13 @@ export default GlobalDataProvider
 // Types
 
 export interface IGlobalData {
+   User: UserType,
    Finances: Transaction[]
    FetchingFinanceData: boolean
    Exchange: MoneyConversionApiResponse | undefined
    FetchingExchangeData: boolean
    ValidCurrencies: {[code: string]: Currency},
-   User: UserType
+   
 
 }
 export type GlobalDataContextType = {
