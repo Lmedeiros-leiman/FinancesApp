@@ -4,20 +4,29 @@ import { Dropdown, DropdownChangeEvent } from "primereact/dropdown"
 
 export interface CurrencyDropDownProps {
    options: {[key: string]: Currency}
-   onChange: (e : DropdownChangeEvent) => void
+
+   onChange?: (e : DropdownChangeEvent) => void
+   onBlur?: () => void | Promise<void> 
 
    value: Currency
    loading: boolean
+   className?: string
 }
 
 const CurrencyDropDown: React.FC<CurrencyDropDownProps> = (props) => {
-   
+   props.className === undefined ? props.className = "" : props.className
    const DropdownOptions = Object.values(props.options)
 
+   if (props.loading) {
+      return(<>
+      ...
+      </>)
+   }
 
    return (<span>
       
-      <Dropdown filter loading={props.loading}
+      <Dropdown className={props.className}
+         filter loading={props.loading}
          filterBy="name" options={DropdownOptions}
          itemTemplate={(item) => {
             const currency = item as Currency
@@ -43,6 +52,7 @@ const CurrencyDropDown: React.FC<CurrencyDropDownProps> = (props) => {
          tooltipOptions={{
             position: "top"
          }}
+         onBlur={props.onBlur}
          />
          
    </span>)
