@@ -14,6 +14,7 @@ const GlobalDataProvider : React.FC<{children: React.ReactNode}> = ({ children }
       Exchange: undefined,
       FetchingExchangeData: true,
       ValidCurrencies: {},
+      FetchingCurrencies: true,
       User:{
          IsMobile: true,
          BaseCurrency: undefined,
@@ -65,6 +66,7 @@ const GlobalDataProvider : React.FC<{children: React.ReactNode}> = ({ children }
       ChangeData((PrevData) => ({
          ...PrevData,
          ValidCurrencies: data,
+         FetchingCurrencies: false,
       }));
 
    }
@@ -147,6 +149,7 @@ export interface IGlobalData {
    Exchange: MoneyConversionApiResponse | undefined
    FetchingExchangeData: boolean
    ValidCurrencies: {[code: string]: Currency},
+   FetchingCurrencies: boolean,
    
 
 }
