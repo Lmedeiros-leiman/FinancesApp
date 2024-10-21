@@ -10,6 +10,7 @@ import { InputNumber } from "primereact/inputnumber";
 import { Dropdown } from "primereact/dropdown";
 import { Currency, GlobalDataContext, GlobalDataContextType } from "../Data/Contexts/GlobalDataContext";
 import "../styles/InputTransaction.css";
+import CurrencyDropDown from "./form/CurrencyDropDown";
 
 export default function InputTransaction() {
    const context = useContext(GlobalDataContext) as GlobalDataContextType
@@ -36,11 +37,6 @@ export default function InputTransaction() {
 
    const [open, setOpen] = useState(false);
    const [newTransaction, setNewTransaction] = useState<Transaction>(defaultTransaction);
-
-   const [DropdownOptions, setDropDownOptions] = useState(Object.values(context.data.ValidCurrencies));
-   useEffect( () => {
-      setDropDownOptions(Object.values(context.data.ValidCurrencies))
-   },[context.data.ValidCurrencies]);
 
    const HandleClose = () => {
       setNewTransaction(defaultTransaction)
@@ -101,34 +97,10 @@ export default function InputTransaction() {
                </FloatLabel>
             </div>
             <div className="flex gap-1">
-               <FloatLabel>
-               <Dropdown filter loading={context.data.FetchingCurrencies}
-                  filterBy="name" options={DropdownOptions}
-                  itemTemplate={(item) => {
-                     const currency = item as Currency
-                     return (<>
-                        <div className="flex gap-2">
-                           <aside className="p-1 w-2rem flex justify-content-center  border-round-3xl">
-                              {currency.symbol_native || currency.symbol}
-                           </aside>
-                           <span>{currency.name}</span>
-                           <div>
-                              {currency.code}
-                           </div>
-                        </div>
-                     </>);
-                  }}
-                  onChange={(e) => {
-                     if (e.value === null) return;
-                     setNewTransaction({ ...newTransaction, ammountType: e.value })
-                  }}
-                  value={newTransaction.ammountType}
-                  valueTemplate={(item) => {
-                     const currency = item as Currency
-                     return(<> {currency.symbol_native || currency.symbol} </>)
-                  }} />
-                  <label>Currency</label>
-                  </FloatLabel>
+                  <CurrencyDropDown options={context.data.ValidCurrencies} loading={context.data.FetchingCurrencies}
+                     onChange={(e) => setNewTransaction({ ...newTransaction, ammountType: e.value })}
+                     value={newTransaction.ammountType}/>
+               
                <FloatLabel>
                   <InputNumber required id="amount" maxFractionDigits={6}
                      value={newTransaction.amount}
