@@ -1,8 +1,10 @@
+import { Currency } from "../Contexts/GlobalDataContext";
+
 export type Transaction = {
    title : string;
    amount : number;
    // defaults to US Dollars.
-   ammountType : string;
+   ammountType : Currency;
    type: string | null;
    category: string;
    dateTime: number;
