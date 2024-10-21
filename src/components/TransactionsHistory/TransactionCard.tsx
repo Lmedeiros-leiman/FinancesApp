@@ -28,10 +28,10 @@ const TransactionCard: React.FC<{ transaction: Transaction }> = (props): JSX.Ele
 
       if (data) {
          await db.put(DatabaseStores.Finances, transactionData)
-
+         const updatedDatabase = await db.getAll(DatabaseStores.Finances)
          context.UpdateData(prevData => ({
             ...prevData,
-            Finances: prevData.Finances.map(t => t.id == data.id ? data : t)
+            Finances: updatedDatabase
          }));
       }
       setBusy(false);
