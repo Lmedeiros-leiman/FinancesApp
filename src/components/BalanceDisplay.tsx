@@ -1,8 +1,9 @@
 import { useContext, useEffect, useState } from "react"
 import { InputText } from "primereact/inputtext"
-import { Button } from "primereact/button"
 import { Skeleton } from "primereact/skeleton"
 import { Currency, GlobalDataContext, GlobalDataContextType } from "../Data/Contexts/GlobalDataContext"
+import { Tooltip } from "primereact/tooltip"
+
 
 
 
@@ -62,10 +63,24 @@ export default function BalanceDisplay() {
 
    return (<>
       <span className="flex gap-1">
-         <Button outlined className="m-0 px-2 py-1" icon=" "> { context.data.User.BaseCurrency?.symbol_native } </Button>
-         <InputText readOnly value={String(calculatedTotal)} />
-         <Button className="m-0 px-2 py-1" icon={ showingData ? "pi pi-eye-slash" : "pi pi-eye" } 
-         onClick={() => setShowingData(!showingData)} />
+         <div className="p-inputgroup flex-1">
+            <span className="p-inputgroup-addon">
+               <Tooltip target=".custom-target-icon" />
+               <i className="m-0 p-0 custom-target-icon"
+                  data-pr-tooltip={context.data.User.BaseCurrency?.name + " | "+ context.data.User.BaseCurrency?.symbol_native}
+                  data-pr-position="bottom"
+                  data-pr-at="right+5 bottom"
+                  data-pr-my=""
+                  >{ context.data.User.BaseCurrency?.symbol_native }</i>
+            </span>
+            <InputText readOnly value={ showingData ? String(calculatedTotal) : "**********" } />
+            <span className="p-inputgroup-addon">
+               <i className={`pi ${!showingData ? "pi pi-eye-slash" : "pi pi-eye"} cursor-pointer `} 
+               onClick={() => setShowingData(!showingData)} />
+            </span>
+         </div>
+         
+         
       </span>
    </>);
 }
