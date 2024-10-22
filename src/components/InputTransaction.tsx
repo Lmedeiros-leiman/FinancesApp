@@ -7,14 +7,13 @@ import { Database, DatabaseStores } from "../Data/Database";
 import { InputText } from "primereact/inputtext";
 import { FloatLabel } from "primereact/floatlabel";
 import { InputNumber } from "primereact/inputnumber";
-import { Dropdown } from "primereact/dropdown";
-import { Currency, GlobalDataContext, GlobalDataContextType } from "../Data/Contexts/GlobalDataContext";
+import {  GlobalDataContext, GlobalDataContextType } from "../Data/Contexts/GlobalDataContext";
 import "../styles/InputTransaction.css";
 import CurrencyDropDown from "./form/CurrencyDropDown";
 
 export default function InputTransaction() {
    const context = useContext(GlobalDataContext) as GlobalDataContextType
-   const [defaultTransaction] = useState({
+   const defaultTransaction = {
       title: "",
       amount: 0,
       // user base currency or default USD.
@@ -33,7 +32,7 @@ export default function InputTransaction() {
       // these values get added once the transaction is saved.
       createdAt: new Date().getTime(),
       id: crypto.randomUUID()
-   });
+   };
 
    const [open, setOpen] = useState(false);
    const [newTransaction, setNewTransaction] = useState<Transaction>(defaultTransaction);
@@ -53,6 +52,7 @@ export default function InputTransaction() {
          ...newTransaction, 
          type: newTransaction.amount > 0 ? "Expense" : "Income",
          createdAt: new Date().getTime(),
+         id: crypto.randomUUID(),
       });
       
       //
@@ -77,9 +77,9 @@ export default function InputTransaction() {
    }
 
    return (<span>
-      <Button className="gap-1 "
-         onClick={() => setOpen(true)}
-         icon="pi pi-plus">
+      <Button className="gap-1 InputTransaction"
+         onClick={() => setOpen(true)}>
+            <i className="pi pi-plus"></i>
          <span>Add Transaction</span>
       </Button>
 
@@ -97,9 +97,10 @@ export default function InputTransaction() {
                </FloatLabel>
             </div>
             <div className="flex gap-1">
-                  <CurrencyDropDown options={context.data.ValidCurrencies} loading={context.data.FetchingCurrencies}
+                  <CurrencyDropDown loading={context.data.FetchingCurrencies}
+                     options={context.data.ValidCurrencies}
                      onChange={(e) => setNewTransaction({ ...newTransaction, ammountType: e.value })}
-                     value={newTransaction.ammountType}/>
+                     value={newTransaction.ammountType} />
                
                <FloatLabel>
                   <InputNumber required id="amount" maxFractionDigits={6}
