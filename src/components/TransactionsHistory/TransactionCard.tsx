@@ -1,10 +1,10 @@
-import { MouseEventHandler, useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { GlobalDataContext, GlobalDataContextType } from "../../Data/Contexts/GlobalDataContext";
 import { Transaction } from "../../Data/Types/Transaction";
 import { Database, DatabaseStores } from "../../Data/Database";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
-import { Dropdown } from "primereact/dropdown";
+
 import { InputNumber } from "primereact/inputnumber";
 import { Calendar } from "primereact/calendar";
 import CurrencyDropDown from "../form/CurrencyDropDown";

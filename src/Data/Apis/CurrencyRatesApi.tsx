@@ -2,9 +2,8 @@
 // uses ts money to handle the rest.
 // https://api.fxratesapi.com/latest
 
-import { useContext } from "react";
 import CacheStorage from "../Cache/CacheStorage";
-import { Currency, GlobalDataContext, GlobalDataContextType } from "../Contexts/GlobalDataContext";
+import { Currency } from "../Contexts/GlobalDataContext";
 
 export interface MoneyConversionApiResponse {
    success: boolean;

@@ -1,6 +1,6 @@
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { Transaction } from "../Data/Types/Transaction";
 import { Calendar } from "primereact/calendar";
 import { Database, DatabaseStores } from "../Data/Database";
