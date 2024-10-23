@@ -7,3 +7,4 @@ const InlineInput = () => {
          placeholder="placeholder" />
    </span>)
 }
+export default InlineInput
