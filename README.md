@@ -19,6 +19,8 @@ The application is built with the following technologies:
 - User can add and delete expenses and income
 - User can view the total expenses and income with a chart or by a history list.
 - User can view the total balance
+- User can change between currencies freely and opting in for automatic conversion or not.
+- 
 
 ## Running it locally.
 
