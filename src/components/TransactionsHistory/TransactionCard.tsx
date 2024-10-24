@@ -3,11 +3,10 @@ import { GlobalDataContext, GlobalDataContextType } from "../../Data/Contexts/Gl
 import { Transaction } from "../../Data/Types/Transaction";
 import { Database, DatabaseStores } from "../../Data/Database";
 import { Button } from "primereact/button";
-import { InputText } from "primereact/inputtext";
 
-import { InputNumber } from "primereact/inputnumber";
 import { Calendar } from "primereact/calendar";
 import CurrencyDropDown from "../form/CurrencyDropDown";
+import NumberInput from "../form/NumberInput";
 
 
 const TransactionCard: React.FC<{ transaction: Transaction }> = (props): JSX.Element => {
@@ -15,10 +14,14 @@ const TransactionCard: React.FC<{ transaction: Transaction }> = (props): JSX.Ele
    const [transactionData, setTransactionData] = useState(props.transaction);
    const context = useContext(GlobalDataContext) as GlobalDataContextType;
 
-   const backgroundColor = transactionData.type == "Expense" ? "bg-red-200" : "bg-green-200"
-   const borderColor = transactionData.type == "Expense" ? "border-red-300" : "border-green-300"
-   //const textColor = transactionData.type == "Expense" ? "red" : "green"
-   const icon = transactionData.type == "Expense" ? "pi pi-send" : "pi pi-dollar"
+   //
+   const backgroundColor = transactionData.amount < 0 ? "bg-red-300" : transactionData.amount > 0 ? "bg-green-300" : "bg-gray-300"
+   const borderColor = transactionData.amount < 0 ? "border-red-700" : transactionData.amount > 0 ? "border-green-700" : "border-gray-300"
+   const textColor = transactionData.amount < 0 ? "text-red-700" : transactionData.amount > 0 ? "text-green-700" : ""
+   const icon = transactionData.amount < 0 ? "pi pi-send" : transactionData.amount > 0 ? "pi  pi-dollar" : "pi pi-arrow-down"
+
+   const inputVisibility = context.data.User.ShowForms ? "" : "hidden-input";
+
    const transactionDataTime = new Date(transactionData.dateTime)
 
    const HandleBlur = async () => {
@@ -38,7 +41,7 @@ const TransactionCard: React.FC<{ transaction: Transaction }> = (props): JSX.Ele
    }
 
    const confirmAction = async () => {
-      
+
       const confirmation = confirm("Are you sure you want to delete this transaction?");
 
       if (confirmation) {
@@ -53,75 +56,71 @@ const TransactionCard: React.FC<{ transaction: Transaction }> = (props): JSX.Ele
             ...prevData,
             Finances: data.filter((_, index) => index !== indexToDelete)
          }));
-         
+
          setBusy(false)
          confirm("Transaction deleted!")
       }
    }
 
-   return (
-      <article className={` border-1 ${borderColor} flex gap-1 flex-wrap max-w-30rem surface-ground p-2 shadow-3 border-round-2xl `}>
-
-         <header className={`  text-justify flex justify-content-between w-full `}>
-            <i className={` ${icon} ${backgroundColor}  align-content-center border-round-3xl text-4xl p-2 `} />
-
-            <span>
-               <Button className="align-self-end" icon="pi pi-trash" severity="danger" disabled={busy} outlined
-                  onClick={confirmAction} />
-            </span>
-         </header>
-         <section className=" text-justify px-1 flex flex-column flex-grow-1 gap-1 ">
-            <InputText value={transactionData.title}
-               className="border-none text-xl surface-ground"
-               onChange={(e) => {
-                  setTransactionData(prevData => ({ ...prevData, title: e.target.value }));
-               }}
+   return (<article className={`surface-ground p-1 py-2 flex w-full max-w-25rem flex-wrap  border-1 ${borderColor} shadow-3 border-round relative`}>
+      <header className="flex px-1 justify-content-between align-content-center w-full gap-1 ">
+         <i className={` ${icon} ${backgroundColor} border-round-3xl text-4xl p-2 `} />
+         <section className=" flex w-full gap-1 my-auto ">
+            <input placeholder="Transaction Title" value={transactionData.title}
+               onChange={(e) => {setTransactionData(prevData => ({ ...prevData, title: e.target.value }))}}
                onBlur={HandleBlur}
-            />
-            <div className="flex gap-1 justify-content-start align-items-center">
-               <CurrencyDropDown className="hidden-input "
-                  loading={context.data.FetchingCurrencies}
-                  options={context.data.ValidCurrencies}
-                  value={transactionData.ammountType}
-                  onChange={(e) => {
-                     setTransactionData(prevData => ({ ...prevData, ammountType: e.value }));
-                  }}
-                  onBlur={HandleBlur}
-               />
-
-               <InputNumber className=" hidden-input "
-                  defaultValue={0}
-                  value={transactionData.amount} minFractionDigits={0} maxFractionDigits={20}
-                  onBlur={HandleBlur}
-                  onChange={(e) => {
-                     setBusy(true);
-                     setTransactionData(prevData => ({
-                        ...prevData,
-                        amount: e.value == null ? 0 : e.value,
-                        type: e.value == null ? "Expense" : e.value <= 0 ? "Expense" : "Income",
-                     }));
-                     setBusy(false);
-                  }}
-               />
-            </div>
-
+               className={` text-xl flex-grow-1 p-2 ${inputVisibility} surface-ground`} />
          </section>
 
-         <footer className="w-full flex justify-content-between">
-            <div className="flex w-full justify-content-end pr-2 text-color-secondary">
-               <span>
-                  <Calendar touchUI={context.data.User.IsMobile}
-                     onChange={(e) => {
-                        setBusy(true);
-                        setTransactionData(prevData => ({ ...prevData, dateTime: (e.value as Date).getTime() }));
-                        setBusy(false);
-                     }}
-                     onBlur={HandleBlur}
-                     className="hidden-input" showTime
-                     value={transactionDataTime} />
-               </span>
-            </div>
-         </footer>
-      </article>);
+         <div>
+            <Button className="align-self-end" icon="pi pi-trash" severity="danger" disabled={busy} outlined onClick={confirmAction} />
+         </div>
+      </header>
+      <section className="flex w-full gap-1 pt-1 px-2">
+         <CurrencyDropDown className={`${inputVisibility}`}
+            loading={context.data.FetchingCurrencies}
+            options={context.data.ValidCurrencies}
+            value={transactionData.ammountType}
+            onChange={(e) => {
+               let newAmmount = transactionData.amount;
+               if (context.data.User.AutoExchange) {
+                  if (context.data.Exchange) {
+                     if (transactionData.ammountType.code != context.data.User.BaseCurrency.code)
+                     { // we fetch the original value from the exchange rates.
+                        newAmmount /= context.data.Exchange.rates[transactionData.ammountType.code];
+                     }
+                     newAmmount *= context.data.Exchange.rates[e.value.code];
+                  }
+               }
+               setTransactionData(prevData => ({ 
+                  ...prevData, 
+                  ammountType: e.value,
+                  amount: newAmmount, 
+               }));
+            }}
+            onBlur={HandleBlur} />
+
+         <NumberInput placeholder="Transaction Ammount" 
+           className={`flex-grow-1 hidden-input text-lg p-2 ${textColor} ${inputVisibility}`}
+           value={transactionData.amount}
+            onChange={(e : React.ChangeEvent<HTMLInputElement>) => {
+                  setTransactionData(prevData => ({ ...prevData, amount: parseFloat(e.target.value)  }));
+            }}
+            onBlur={HandleBlur}
+         />
+         
+      </section>
+      <footer className="flex w-full justify-content-end">
+         <Calendar touchUI={context.data.User.IsMobile}
+            onChange={(e) => {
+               setBusy(true);
+               setTransactionData(prevData => ({ ...prevData, dateTime: (e.value as Date).getTime() }));
+               setBusy(false);
+            }}
+            onBlur={HandleBlur}
+            className="hidden-input mt-2" showTime
+            value={transactionDataTime} />
+      </footer>
+   </article>)
 };
 export default TransactionCard
