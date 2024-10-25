@@ -11,7 +11,7 @@ export default function BalanceDisplay() {
    const context = useContext(GlobalDataContext) as GlobalDataContextType
 
    const [calculatedTotal, setCalculatedTotal] = useState(0);
-   const [showingData, setShowingData] = useState(true);
+   const [showingData, setShowingData] = useState(localStorage.getItem("showingData") ?? true);
 
    const UserCurrency = context.data.User.BaseCurrency as Currency;
 
@@ -73,13 +73,12 @@ export default function BalanceDisplay() {
                   data-pr-my=""
                   >{ context.data.User.BaseCurrency?.symbol_native }</i>
             </span>
-            <InputText readOnly value={ showingData ? String(calculatedTotal) : "**********" } />
+            <InputText readOnly value={ showingData ? String(calculatedTotal.toFixed(context.data.User.BaseCurrency.decimal_digits)) : "**********" } />
             <span className="p-inputgroup-addon">
                <i className={`pi ${!showingData ? "pi pi-eye-slash" : "pi pi-eye"} cursor-pointer `} 
                onClick={() => setShowingData(!showingData)} />
             </span>
          </div>
-         
          
       </span>
    </>);
