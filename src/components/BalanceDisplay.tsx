@@ -11,7 +11,7 @@ export default function BalanceDisplay() {
    const context = useContext(GlobalDataContext) as GlobalDataContextType
 
    const [calculatedTotal, setCalculatedTotal] = useState(0);
-   const [showingData, setShowingData] = useState<boolean>(context.data.User.ShowValues);
+   const [showingData, setShowingData] = useState<boolean>(context.data.User.Settings.ShowValues);
 
    const UserCurrency = context.data.User.BaseCurrency as Currency;
 
@@ -43,7 +43,6 @@ export default function BalanceDisplay() {
             }
             return prevData
          }, 0);
-         console.log(value)
          setCalculatedTotal(value);
       }
 
@@ -79,19 +78,19 @@ export default function BalanceDisplay() {
             <span className="p-inputgroup-addon">
                <i className={`pi ${!showingData ? "pi pi-eye-slash" : "pi pi-eye"} cursor-pointer `} 
                onClick={() => {
-                  const newValue = !showingData;
-                  if (newValue) {
-                     localStorage.setItem("showValues", "1");
-                  } else {
-                     localStorage.removeItem("showValues");
-                  }
-                  setShowingData( newValue )
-                  context.data.User.ShowValues
+                  showingData ? localStorage.setItem("showValues", "1") : localStorage.removeItem("showValues");
+                  
+                  
+                  setShowingData( !showingData )
+                  context.data.User.Settings.ShowValues
                   context.UpdateData( (PrevData) => ({
                      ...PrevData,
                      User: {
                         ...PrevData.User,
-                        ShowValues: newValue,
+                        Settings: {
+                           ...PrevData.User.Settings,
+                           ShowValues: !showingData
+                        }
                      }}));
                   
                }} />
