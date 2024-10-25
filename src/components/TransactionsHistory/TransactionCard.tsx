@@ -14,14 +14,14 @@ const TransactionCard: React.FC<{ transaction: Transaction }> = (props): JSX.Ele
    const [transactionData, setTransactionData] = useState(props.transaction);
    const context = useContext(GlobalDataContext) as GlobalDataContextType;
 
-   const ShowData = context.data.User.ShowValues;
+   const ShowData = context.data.User.Settings.ShowValues;
    //
    const backgroundColor = transactionData.amount < 0 ? "bg-red-300" : transactionData.amount > 0 ? "bg-green-300" : "bg-gray-300"
    const borderColor = transactionData.amount < 0 ? "border-red-700" : transactionData.amount > 0 ? "border-green-700" : "border-gray-300"
    const textColor = transactionData.amount < 0 ? "text-red-700" : transactionData.amount > 0 ? "text-green-700" : ""
    const icon = transactionData.amount < 0 ? "pi pi-send" : transactionData.amount > 0 ? "pi  pi-dollar" : "pi pi-arrow-down"
 
-   const inputVisibility = context.data.User.ShowForms ? "" : "hidden-input";
+   const inputVisibility = context.data.User.Settings.ShowForms ? "" : "hidden-input";
 
    const transactionDataTime = new Date(transactionData.dateTime)
 
@@ -87,7 +87,7 @@ const TransactionCard: React.FC<{ transaction: Transaction }> = (props): JSX.Ele
                value={transactionData.ammountType}
                onChange={(e) => {
                   let newAmmount = transactionData.amount;
-                  if (context.data.User.AutoExchange) {
+                  if (context.data.User.Settings.AutoExchange) {
                      if (context.data.Exchange) {
                         if (transactionData.ammountType.code != context.data.User.BaseCurrency.code) { // we fetch the original value from the exchange rates.
                            newAmmount /= context.data.Exchange.rates[transactionData.ammountType.code];
