@@ -14,6 +14,7 @@ const TransactionCard: React.FC<{ transaction: Transaction }> = (props): JSX.Ele
    const [transactionData, setTransactionData] = useState(props.transaction);
    const context = useContext(GlobalDataContext) as GlobalDataContextType;
 
+   const ShowData = context.data.User.ShowValues;
    //
    const backgroundColor = transactionData.amount < 0 ? "bg-red-300" : transactionData.amount > 0 ? "bg-green-300" : "bg-gray-300"
    const borderColor = transactionData.amount < 0 ? "border-red-700" : transactionData.amount > 0 ? "border-green-700" : "border-gray-300"
@@ -67,7 +68,7 @@ const TransactionCard: React.FC<{ transaction: Transaction }> = (props): JSX.Ele
          <i className={` ${icon} ${backgroundColor} border-round-3xl text-4xl p-2 `} />
          <section className=" flex w-full gap-1 my-auto ">
             <input placeholder="Transaction Title" value={transactionData.title}
-               onChange={(e) => {setTransactionData(prevData => ({ ...prevData, title: e.target.value }))}}
+               onChange={(e) => { setTransactionData(prevData => ({ ...prevData, title: e.target.value })) }}
                onBlur={HandleBlur}
                className={` text-xl flex-grow-1 p-2 ${inputVisibility} surface-ground`} />
          </section>
@@ -77,38 +78,49 @@ const TransactionCard: React.FC<{ transaction: Transaction }> = (props): JSX.Ele
          </div>
       </header>
       <section className="flex w-full gap-1 pt-1 px-2">
-         <CurrencyDropDown className={`${inputVisibility}`}
-            loading={context.data.FetchingCurrencies}
-            options={context.data.ValidCurrencies}
-            value={transactionData.ammountType}
-            onChange={(e) => {
-               let newAmmount = transactionData.amount;
-               if (context.data.User.AutoExchange) {
-                  if (context.data.Exchange) {
-                     if (transactionData.ammountType.code != context.data.User.BaseCurrency.code)
-                     { // we fetch the original value from the exchange rates.
-                        newAmmount /= context.data.Exchange.rates[transactionData.ammountType.code];
-                     }
-                     newAmmount *= context.data.Exchange.rates[e.value.code];
-                  }
-               }
-               setTransactionData(prevData => ({ 
-                  ...prevData, 
-                  ammountType: e.value,
-                  amount: newAmmount, 
-               }));
-            }}
-            onBlur={HandleBlur} />
 
-         <NumberInput placeholder="Transaction Ammount" 
-           className={`flex-grow-1 hidden-input text-lg p-2 ${textColor} ${inputVisibility}`}
-           value={transactionData.amount}
-            onChange={(e : React.ChangeEvent<HTMLInputElement>) => {
-                  setTransactionData(prevData => ({ ...prevData, amount: parseFloat(e.target.value)  }));
-            }}
-            onBlur={HandleBlur}
-         />
-         
+         {ShowData ? <>
+
+            <CurrencyDropDown className={`${inputVisibility}`}
+               loading={context.data.FetchingCurrencies}
+               options={context.data.ValidCurrencies}
+               value={transactionData.ammountType}
+               onChange={(e) => {
+                  let newAmmount = transactionData.amount;
+                  if (context.data.User.AutoExchange) {
+                     if (context.data.Exchange) {
+                        if (transactionData.ammountType.code != context.data.User.BaseCurrency.code) { // we fetch the original value from the exchange rates.
+                           newAmmount /= context.data.Exchange.rates[transactionData.ammountType.code];
+                        }
+                        newAmmount *= context.data.Exchange.rates[e.value.code];
+                     }
+                  }
+                  setTransactionData(prevData => ({
+                     ...prevData,
+                     ammountType: e.value,
+                     amount: newAmmount,
+                  }));
+               }}
+               onBlur={HandleBlur} />
+
+            <NumberInput placeholder="Transaction Ammount"
+               className={`flex-grow-1 hidden-input text-lg p-2 ${textColor} ${inputVisibility}`}
+               value={transactionData.amount}
+               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  setTransactionData(prevData => ({ ...prevData, amount: parseFloat(e.target.value) }));
+               }}
+               onBlur={HandleBlur}
+            />
+         </> : <div className="">
+            <i className="pi pi-lock text-xl pl-2 pr-1" />
+            <input className="flex-grow-1 p-2 text-lg hidden-input surface-ground"
+               placeholder="************" readOnly
+               value={"************"} />
+
+         </div>}
+
+
+
       </section>
       <footer className="flex w-full justify-content-end">
          <Calendar touchUI={context.data.User.IsMobile}
@@ -121,6 +133,9 @@ const TransactionCard: React.FC<{ transaction: Transaction }> = (props): JSX.Ele
             className="hidden-input mt-2" showTime
             value={transactionDataTime} />
       </footer>
+      <pre>
+         {JSON.stringify(transactionData, null, 2)}
+      </pre>
    </article>)
 };
 export default TransactionCard
