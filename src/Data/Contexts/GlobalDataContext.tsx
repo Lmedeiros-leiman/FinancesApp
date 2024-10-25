@@ -20,9 +20,10 @@ const GlobalDataProvider: React.FC<{ children: React.ReactNode }> = ({ children 
          IsMobile: true,
          BaseCurrency: {"code":"USD","name":"US Dollar","decimal_digits":2,"name_plural":"US dollars","rounding":0,"symbol":"$","symbol_native":"$"},
          //
-         AutoExchange : !(localStorage.getItem("AutoExchange") === "true"), // default: true
-         ResetInputFormOnCancel : !(localStorage.getItem("ResetInputFormOnCancel") === "true"), // default: true
-         ShowForms : (localStorage.getItem("ShowForms") === "true") // default: false,
+         AutoExchange : (localStorage.getItem("AutoExchange") === null), // default: true
+         ResetInputFormOnCancel : (localStorage.getItem("ResetInputFormOnCancel") === null),  // default: true
+         ShowForms : (localStorage.getItem("ShowForms") !== null),              // default: false,
+         ShowValues : (localStorage.getItem("ShowValues") === null)               // default: true, 
       }
 
    });
@@ -161,6 +162,7 @@ export type UserType = {
    AutoExchange : boolean
    ResetInputFormOnCancel : boolean
    ShowForms : boolean
+   ShowValues : boolean
 }
 
 export type Currency = {
