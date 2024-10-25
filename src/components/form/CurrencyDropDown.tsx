@@ -3,18 +3,21 @@ import { Dropdown, DropdownChangeEvent } from "primereact/dropdown"
 
 
 export interface CurrencyDropDownProps {
+   showClear? : boolean
+   loading? : boolean
+
    options: {[key: string]: Currency}
 
    onChange?: (e : DropdownChangeEvent) => void
    onBlur?: () => void | Promise<void> 
 
    value: Currency
-   loading: boolean
    className?: string
+
+   valueTemplate? : (item: Currency) => JSX.Element
 }
 
 const CurrencyDropDown: React.FC<CurrencyDropDownProps> = (props) => {
-   props.className === undefined ? props.className = "" : props.className
    const DropdownOptions = Object.values(props.options)
 
    if (props.loading) {
@@ -25,7 +28,7 @@ const CurrencyDropDown: React.FC<CurrencyDropDownProps> = (props) => {
 
    return (<span>
       
-      <Dropdown className={props.className}
+      <Dropdown className={props.className} showClear={props.showClear}
          filter loading={props.loading}
          filterBy="name" options={DropdownOptions}
          itemTemplate={(item) => {
@@ -43,12 +46,11 @@ const CurrencyDropDown: React.FC<CurrencyDropDownProps> = (props) => {
             </>);
          }}
          value={props.value}
-         valueTemplate={(item) => {
-            const currency = item as Currency
-            return(<> {currency.symbol_native || currency.symbol} </>)
-         }}
+         valueTemplate={props.valueTemplate ?? 
+            ( (item : Currency) => <> {item.symbol_native || item.symbol} </>)
+         }
          onChange={props.onChange} 
-         tooltip="Selected Currency"
+         tooltip={`${props.value.name}`}
          tooltipOptions={{
             position: "top"
          }}
@@ -58,4 +60,3 @@ const CurrencyDropDown: React.FC<CurrencyDropDownProps> = (props) => {
    </span>)
 }
 export default CurrencyDropDown;
-
