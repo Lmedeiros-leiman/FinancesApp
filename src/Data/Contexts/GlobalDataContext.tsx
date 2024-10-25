@@ -17,7 +17,11 @@ const GlobalDataProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       FetchingCurrencies: true,
       User: {
          IsMobile: true,
-         BaseCurrency: undefined,
+         BaseCurrency: {"code":"USD","name":"US Dollar","decimal_digits":2,"name_plural":"US dollars","rounding":0,"symbol":"$","symbol_native":"$"},
+         //
+         AutoExchange : !(localStorage.getItem("AutoExchange") === "true"), // default: true
+         ResetInputFormOnCancel : !(localStorage.getItem("ResetInputFormOnCancel") === "true"), // default: true
+         ShowForms : (localStorage.getItem("ShowForms") === "true") // default: false,
       }
 
    });
@@ -28,7 +32,6 @@ const GlobalDataProvider: React.FC<{ children: React.ReactNode }> = ({ children 
    // fetches user base currency.
    // also fetches exchange data from the api or cache.
    const FetchCurenciesApiData = async () => {
-
       const userLocale = navigator.language || "en-US";
       let userCurrencyData = await CacheStorage.get("UserCurrency", `./locales/${userLocale}/currency.json`) as Currency | undefined;
 
@@ -53,7 +56,7 @@ const GlobalDataProvider: React.FC<{ children: React.ReactNode }> = ({ children 
          FetchingExchangeData: false,
          User: {
             ...PrevData.User,
-            BaseCurrency: userCurrencyData
+            BaseCurrency: userCurrencyData as Currency
          }
       }));
    }
@@ -152,7 +155,11 @@ export type GlobalDataContextType = {
 
 export type UserType = {
    IsMobile: boolean
-   BaseCurrency: Currency | undefined
+   BaseCurrency: Currency
+   //
+   AutoExchange : boolean
+   ResetInputFormOnCancel : boolean
+   ShowForms : boolean
 }
 
 export type Currency = {

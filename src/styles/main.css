@@ -29,14 +29,6 @@ body,html {
    color: var(--text-color-secondary);
 }
 
-.red input.p-inputnumber-input.p-inputtext.p-component.p-filled{
-   color: var(--red-400) ;
-   border: none;
-}
-.green input.p-inputnumber-input.p-inputtext.p-component.p-filled{
-   color: var(--green-400);
-   border: none;
-}
 
 
 /* Chrome, Safari, Edge, Opera */
