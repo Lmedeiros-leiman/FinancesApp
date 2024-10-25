@@ -11,7 +11,7 @@ export default function BalanceDisplay() {
    const context = useContext(GlobalDataContext) as GlobalDataContextType
 
    const [calculatedTotal, setCalculatedTotal] = useState(0);
-   const [showingData, setShowingData] = useState(localStorage.getItem("showingData") ?? true);
+   const [showingData, setShowingData] = useState<boolean>(context.data.User.ShowValues);
 
    const UserCurrency = context.data.User.BaseCurrency as Currency;
 
@@ -30,9 +30,11 @@ export default function BalanceDisplay() {
                // check if the exchange rates are available.
                if (ExchangeRates?.rates != undefined) {
                   // check if the currency is the same as the user base currency.
+                  
                   if (currData.ammountType.code != UserCurrency.code) {
-                     currData.amount = ExchangeRates.rates[currData.ammountType.code] * currData.amount
+                     currData.amount = currData.amount / ExchangeRates.rates[currData.ammountType.code]
                   }
+               
                }
 
                // we add the ammount even if its not the same as the user base currency.
@@ -41,7 +43,7 @@ export default function BalanceDisplay() {
             }
             return prevData
          }, 0);
-
+         console.log(value)
          setCalculatedTotal(value);
       }
 
@@ -76,7 +78,23 @@ export default function BalanceDisplay() {
             <InputText readOnly value={ showingData ? String(calculatedTotal.toFixed(context.data.User.BaseCurrency.decimal_digits)) : "**********" } />
             <span className="p-inputgroup-addon">
                <i className={`pi ${!showingData ? "pi pi-eye-slash" : "pi pi-eye"} cursor-pointer `} 
-               onClick={() => setShowingData(!showingData)} />
+               onClick={() => {
+                  const newValue = !showingData;
+                  if (newValue) {
+                     localStorage.setItem("showValues", "1");
+                  } else {
+                     localStorage.removeItem("showValues");
+                  }
+                  setShowingData( newValue )
+                  context.data.User.ShowValues
+                  context.UpdateData( (PrevData) => ({
+                     ...PrevData,
+                     User: {
+                        ...PrevData.User,
+                        ShowValues: newValue,
+                     }}));
+                  
+               }} />
             </span>
          </div>
          
