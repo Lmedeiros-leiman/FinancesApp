@@ -6,6 +6,7 @@ import CacheStorage from "../Cache/CacheStorage";
 
 export const GlobalDataContext = createContext<GlobalDataContextType | null>(null);
 
+
 const GlobalDataProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
    const [data, ChangeData] = useState<IGlobalData>({
@@ -60,7 +61,7 @@ const GlobalDataProvider: React.FC<{ children: React.ReactNode }> = ({ children 
          }
       }));
    }
-
+   
    // fetches finances data from the database.
    const FetchFinancesData = async () => {
       try {
