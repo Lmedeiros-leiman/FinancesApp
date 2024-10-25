@@ -1,8 +1,8 @@
 export enum AvailableThemes {
-   "Arya Blue (dark)" = "arya-blue",
-   "Arya Green (dark)" = "arya-green",
-   "Arya Orange (dark)" = "arya-orange",
-   "Arya Purple (dark)" = "arya-purple",
+   "Arya Blue" = "arya-blue",
+   "Arya Green" = "arya-green",
+   "Arya Orange" = "arya-orange",
+   "Arya Purple" = "arya-purple",
    "Bootstrap4 Dark Blue" = "bootstrap4-dark-blue",
    "Bootstrap4 Dark Purple" = "bootstrap4-dark-purple",
    "Bootstrap4 Light Blue" = "bootstrap4-light-blue",
