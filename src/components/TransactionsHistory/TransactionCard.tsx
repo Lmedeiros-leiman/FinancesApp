@@ -133,9 +133,6 @@ const TransactionCard: React.FC<{ transaction: Transaction }> = (props): JSX.Ele
             className="hidden-input mt-2" showTime
             value={transactionDataTime} />
       </footer>
-      <pre>
-         {JSON.stringify(transactionData, null, 2)}
-      </pre>
    </article>)
 };
 export default TransactionCard
