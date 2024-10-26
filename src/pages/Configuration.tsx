@@ -1,13 +1,9 @@
-import { useContext } from "react";
-import { GlobalDataContext, GlobalDataContextType } from "../Data/Contexts/GlobalDataContext";
 import ThemePicker from "../components/Configurables/ThemePicker";
 import UserSettingSwitches from "../components/Configurables/UserSettingSwitches";
 import TreeDataDumper from "../components/Configurables/TreeDataDumper";
 import PreferableCurrency from "../components/Configurables/PreferableCurrency";
 
 export default function Configuration() {
-   const context = useContext(GlobalDataContext) as GlobalDataContextType;
-
    
    return (<section className="flex flex-wrap flex-grow-1 ">
       <div className=" m-1 border-round w-min flex-grow-1 surface-ground  px-2 pb-1 ">
@@ -27,9 +23,6 @@ export default function Configuration() {
             </div>
          
          </div>
-         
-
-         
       </div>
 
       <footer className="flex-grow-1 p-1 w-full surface-ground border-round-xl shadow-6 m-1">
