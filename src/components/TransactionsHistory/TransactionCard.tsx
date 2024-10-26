@@ -63,7 +63,7 @@ const TransactionCard: React.FC<{ transaction: Transaction }> = (props): JSX.Ele
       }
    }
 
-   return (<article className={`surface-ground p-1 py-2 flex w-full max-w-25rem flex-wrap  border-1 ${borderColor} shadow-3 border-round relative`}>
+   return (<article className={`surface-ground p-1 py-2 flex w-full max-w-25rem flex-wrap  border-1 ${borderColor} shadow-3 border-round-xl relative`}>
       <header className="flex px-1 justify-content-between align-content-center w-full gap-1 ">
          <i className={` ${icon} ${backgroundColor} border-round-3xl text-4xl p-2 `} />
          <section className=" flex w-full gap-1 my-auto ">
