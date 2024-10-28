@@ -1,8 +1,12 @@
 import { useContext, useEffect, useState } from "react"
 import { InputText } from "primereact/inputtext"
 import { Skeleton } from "primereact/skeleton"
-import { Currency, GlobalDataContext, GlobalDataContextType } from "../Data/Contexts/GlobalDataContext"
+import { GlobalDataContext, GlobalDataContextType } from "../Data/Contexts/GlobalDataContext"
 import { Tooltip } from "primereact/tooltip"
+import { FinancesContext, FinancesContextType } from "../Data/Contexts/FinancesContext"
+import { Usercontext, UserContextType } from "../Data/Contexts/UserContext"
+import { ExchangeContext, ExchangeContextType } from "../Data/Contexts/ExchangeContext"
+
 
 
 
@@ -10,48 +14,49 @@ import { Tooltip } from "primereact/tooltip"
 export default function BalanceDisplay() {
    const context = useContext(GlobalDataContext) as GlobalDataContextType
 
-   const [calculatedTotal, setCalculatedTotal] = useState(0);
-   const [showingData, setShowingData] = useState<boolean>(context.data.User.Settings.ShowValues);
+   const finances = useContext(FinancesContext) as FinancesContextType
+   const exchanges = useContext(ExchangeContext) as ExchangeContextType
+   const userConfigs = useContext(Usercontext) as UserContextType
 
-   const UserCurrency = context.data.User.BaseCurrency as Currency;
+   const [total, setTotal] = useState(0);
+   const [showingData, setShowingData] = useState<boolean>(userConfigs.data.Settings.ShowValues);
 
-   useEffect(() => {
-      // calculates the user current balance.
-      const calculateTotal = () => {
-         if (context.data.FetchingFinanceData || (context.data.FetchingExchangeData)) { return; }
-         if (context.data.User.BaseCurrency === undefined) { return; }
+   useEffect( () => {
+      const dates = Object.keys(finances.data).sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+      const todayKey = new Date().toDateString()
+
+      let calculatedTotal = 0;
+      for (let i = 0; i < dates.length; i++) { 
+         let currentDateKey = dates[i]
+         
          //
-         const ExchangeRates = context.data.Exchange;
+         finances.data[currentDateKey].forEach(t => {
+            const rates = exchanges.data.rates
 
-         const value = context.data.Finances.reduce((prevData, currData) => {
-            // if the transaction happened INBETWEEN the selected timeframe limit.
-            // for now its just if it happened before today's timestamp.
-            if (currData.dateTime < new Date().getTime()) {
-               // check if the exchange rates are available.
-               if (ExchangeRates?.rates != undefined) {
-                  // check if the currency is the same as the user base currency.
-                  
-                  if (currData.ammountType.code != UserCurrency.code) {
-                     currData.amount = currData.amount / ExchangeRates.rates[currData.ammountType.code]
-                  }
-               
+            if (rates) {
+               if (t.ammountType.code === userConfigs.data.BaseCurrency) { 
+                  calculatedTotal += t.amount
+               } else {
+                  calculatedTotal += t.amount / rates[t.ammountType.code]
                }
-
-               // we add the ammount even if its not the same as the user base currency.
-               // probably should turn that into an user config option.
-               prevData += currData.amount;
+            } else {
+               calculatedTotal += t.amount
             }
-            return prevData
-         }, 0);
-         setCalculatedTotal(value);
+            
+            
+         })
+
+         if ( currentDateKey === todayKey) {
+            setTotal(calculatedTotal);
+            break;
+         }
       }
+      
 
-      calculateTotal();
-
-   }, [context.data.Finances, context.data.Exchange, context.data.User.BaseCurrency]);
+   },[finances,exchanges,userConfigs.data.BaseCurrency]); 
 
 
-   if (context.data.FetchingFinanceData) {
+   if (finances.busy || exchanges.busy) {
       return (<>
          <span className="flex gap-1 align-items-center ">
             <Skeleton width="2rem" height="3rem" />
@@ -68,13 +73,13 @@ export default function BalanceDisplay() {
             <span className="p-inputgroup-addon">
                <Tooltip target=".custom-target-icon" />
                <i className="m-0 p-0 custom-target-icon"
-                  data-pr-tooltip={context.data.User.BaseCurrency?.name + " | "+ context.data.User.BaseCurrency?.symbol_native}
+                  data-pr-tooltip={userConfigs.data.BaseCurrency.symbol + " | "+ userConfigs.data.BaseCurrency.symbol_native}
                   data-pr-position="bottom"
                   data-pr-at="right+5 bottom"
                   data-pr-my=""
                   >{ context.data.User.BaseCurrency?.symbol_native }</i>
             </span>
-            <InputText readOnly value={ showingData ? String(calculatedTotal.toFixed(context.data.User.BaseCurrency.decimal_digits)) : "**********" } />
+            <InputText readOnly value={ showingData ? String(total.toFixed(userConfigs.data.BaseCurrency.decimal_digits)) : "**********" } />
             <span className="p-inputgroup-addon">
                <i className={`pi ${!showingData ? "pi pi-eye-slash" : "pi pi-eye"} cursor-pointer `} 
                onClick={() => {
@@ -82,16 +87,15 @@ export default function BalanceDisplay() {
                   
                   
                   setShowingData( !showingData )
-                  context.data.User.Settings.ShowValues
-                  context.UpdateData( (PrevData) => ({
+                  
+                  userConfigs.setter( (PrevData) => ({
                      ...PrevData,
-                     User: {
-                        ...PrevData.User,
-                        Settings: {
-                           ...PrevData.User.Settings,
-                           ShowValues: !showingData
-                        }
-                     }}));
+                     Settings: {
+                        ...PrevData.Settings,
+                        ShowValues: !showingData
+                     }
+                  }));
+                  
                   
                }} />
             </span>
