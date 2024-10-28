@@ -7,7 +7,6 @@ import Sidebar from './layout/Sidebar.tsx'
 import "./styles/main.css"
 import "primeflex/primeflex.min.css"
 import "primeicons/primeicons.css"
-import GlobalDataProvider from './Data/Contexts/GlobalDataContext.tsx'
 import FinacesContextProvider from './Data/Contexts/FinancesContext.tsx'
 import UserContextProvider from './Data/Contexts/UserContext.tsx'
 import ExchangeContextProvider from './Data/Contexts/ExchangeContext.tsx'
@@ -31,9 +30,9 @@ export function App() {
       <CurrencyContextProvider>
         <ExchangeContextProvider>
           <FinacesContextProvider>
-            <GlobalDataProvider>
+            
               <Sidebar />
-            </GlobalDataProvider>
+            
           </FinacesContextProvider>
         </ExchangeContextProvider>
       </CurrencyContextProvider>
