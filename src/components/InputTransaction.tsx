@@ -3,16 +3,18 @@ import { Dialog } from "primereact/dialog";
 import { useContext, useState } from "react";
 import { Transaction } from "../Data/Types/Transaction";
 import { Calendar } from "primereact/calendar";
-import { Database, DatabaseStores } from "../Data/Database";
+import { Database } from "../Data/Database/Database";
 import { InputText } from "primereact/inputtext";
 import { FloatLabel } from "primereact/floatlabel";
 import { InputNumber } from "primereact/inputnumber";
 import {  GlobalDataContext, GlobalDataContextType } from "../Data/Contexts/GlobalDataContext";
 import "../styles/InputTransaction.css";
 import CurrencyDropDown from "./form/CurrencyDropDown";
+import { FinancesContext, FinancesContextType } from "../Data/Contexts/FinancesContext";
 
 export default function InputTransaction() {
    const context = useContext(GlobalDataContext) as GlobalDataContextType
+   const finances = useContext(FinancesContext) as FinancesContextType
    const defaultTransaction = {
       title: "",
       amount: 0,
@@ -31,7 +33,6 @@ export default function InputTransaction() {
       type: null,
       // these values get added once the transaction is saved.
       createdAt: new Date().getTime(),
-      id: crypto.randomUUID()
    };
 
    const [open, setOpen] = useState(false);
@@ -45,34 +46,21 @@ export default function InputTransaction() {
    const HandleSave = async (e : React.SyntheticEvent) => {
       e.preventDefault()
       console.log("Adding new transaction to database...")
+      const result = await Database.AddTransaction(newTransaction);
+      console.log("Added: ", String(result) );
 
-      //
-      // do some data handling before inserting into the database.
-      setNewTransaction({
-         ...newTransaction, 
-         type: newTransaction.amount > 0 ? "Expense" : "Income",
-         createdAt: new Date().getTime(),
-         id: crypto.randomUUID(),
-      });
-      
-      //
-      // now we can insert it.
-      const db = await Database.getDB();
-      while (await db.getKey(DatabaseStores.Finances, newTransaction.id) == newTransaction.id) {
-         // making sure its ID is unique.
-         setNewTransaction({ ...newTransaction, id: crypto.randomUUID() })
+      if (result) {
+         const key = (new Date(newTransaction.dateTime).toDateString() )
+         finances.setter(prevData => ({
+            ...prevData,
+            [key] : [
+               ...(prevData[key] || []),
+               newTransaction
+            ]
+         }));
+         console.log("New transaction added to database.")
       }
-      await db.add(DatabaseStores.Finances, newTransaction)
-      context.UpdateData(prevData => ({
-         ...prevData,
-         Finances: [
-            ...prevData.Finances,
-            newTransaction
-         ]
-      }));
-
-      console.log("New transaction added to database.")
-      db.close()
+      
       HandleClose();
    }
 
