@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from "react"
 import { InputText } from "primereact/inputtext"
 import { Skeleton } from "primereact/skeleton"
-import { GlobalDataContext, GlobalDataContextType } from "../Data/Contexts/GlobalDataContext"
 import { Tooltip } from "primereact/tooltip"
 import { FinancesContext, FinancesContextType } from "../Data/Contexts/FinancesContext"
 import { Usercontext, UserContextType } from "../Data/Contexts/UserContext"
@@ -12,7 +11,6 @@ import { ExchangeContext, ExchangeContextType } from "../Data/Contexts/ExchangeC
 
 
 export default function BalanceDisplay() {
-   const context = useContext(GlobalDataContext) as GlobalDataContextType
 
    const finances = useContext(FinancesContext) as FinancesContextType
    const exchanges = useContext(ExchangeContext) as ExchangeContextType
@@ -77,7 +75,7 @@ export default function BalanceDisplay() {
                   data-pr-position="bottom"
                   data-pr-at="right+5 bottom"
                   data-pr-my=""
-                  >{ context.data.User.BaseCurrency?.symbol_native }</i>
+                  >{ userConfigs.data.BaseCurrency?.symbol_native }</i>
             </span>
             <InputText readOnly value={ showingData ? String(total.toFixed(userConfigs.data.BaseCurrency.decimal_digits)) : "**********" } />
             <span className="p-inputgroup-addon">

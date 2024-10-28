@@ -1,5 +1,5 @@
-import { Currency, } from "../../Data/Contexts/GlobalDataContext"
 import { Dropdown, DropdownChangeEvent } from "primereact/dropdown"
+import { Currency } from "../../Data/Contexts/CurrencyContext"
 
 
 export interface CurrencyDropDownProps {
