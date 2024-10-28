@@ -31,13 +31,13 @@ export default function BalanceDisplay() {
          
          //
          finances.data[currentDateKey].forEach(t => {
-            const rates = exchanges.data.rates
+            const rates = exchanges.data
 
             if (rates) {
-               if (t.ammountType.code === userConfigs.data.BaseCurrency) { 
+               if (t.ammountType.code === userConfigs.data.BaseCurrency.code) { 
                   calculatedTotal += t.amount
                } else {
-                  calculatedTotal += t.amount / rates[t.ammountType.code]
+                  calculatedTotal += t.amount / rates.rates[t.ammountType.code]
                }
             } else {
                calculatedTotal += t.amount
