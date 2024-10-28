@@ -1,18 +1,22 @@
 import { useContext, useState } from "react";
-import { Currency, FetchLocaleCurrency, GlobalDataContext, GlobalDataContextType } from "../../Data/Contexts/GlobalDataContext";
 import CurrencyDropDown from "../form/CurrencyDropDown";
+import { FetchLocaleCurrency, Usercontext, UserContextType } from "../../Data/Contexts/UserContext";
+import { Currency, CurrencyContext, CurrencyContextType } from "../../Data/Contexts/CurrencyContext";
 
 
 const PreferableCurrency : React.FC = () => {
-   const context = useContext(GlobalDataContext) as GlobalDataContextType;
+   const userConfig = useContext(Usercontext) as UserContextType;
+   const currencies = useContext(CurrencyContext) as CurrencyContextType;
+
+
    const [busy, setBusy] = useState(false);
    return(<>
       <div>
          <label>Preferable Currency </label>
       </div>
-      <CurrencyDropDown loading={context.data.FetchingCurrencies || busy}
-         options={context.data.ValidCurrencies} showClear={!busy}
-         value={context.data.User.BaseCurrency} 
+      <CurrencyDropDown loading={currencies.busy || busy}
+         options={currencies.data} showClear={!busy}
+         value={userConfig.data.BaseCurrency} 
          valueTemplate={(item) => {
             return (<> {item.symbol_native} | {item.name}</>)
          }}
@@ -24,13 +28,10 @@ const PreferableCurrency : React.FC = () => {
                newCurrency = await FetchLocaleCurrency(navigator.language || "en-US")
             }
             
-            context.UpdateData(prevData => ({
+            userConfig.setter(prevData => ({
                ...prevData,
-               User: {
-                  ...prevData.User,
-                  BaseCurrency: newCurrency as Currency
-               }
-            }))
+               BaseCurrency: newCurrency as Currency
+            }));
             setBusy(false);
          }}
       />

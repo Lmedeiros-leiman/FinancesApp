@@ -7,19 +7,22 @@ import { Database } from "../Data/Database/Database";
 import { InputText } from "primereact/inputtext";
 import { FloatLabel } from "primereact/floatlabel";
 import { InputNumber } from "primereact/inputnumber";
-import {  GlobalDataContext, GlobalDataContextType } from "../Data/Contexts/GlobalDataContext";
 import "../styles/InputTransaction.css";
 import CurrencyDropDown from "./form/CurrencyDropDown";
 import { FinancesContext, FinancesContextType } from "../Data/Contexts/FinancesContext";
+import { Usercontext, UserContextType } from "../Data/Contexts/UserContext";
+import { CurrencyContext, CurrencyContextType } from "../Data/Contexts/CurrencyContext";
 
 export default function InputTransaction() {
-   const context = useContext(GlobalDataContext) as GlobalDataContextType
+
+   const userConfigs = useContext(Usercontext) as UserContextType
+   const currencies = useContext(CurrencyContext) as CurrencyContextType
    const finances = useContext(FinancesContext) as FinancesContextType
    const defaultTransaction = {
       title: "",
       amount: 0,
       // user base currency or default USD.
-      ammountType: context.data.User.BaseCurrency || {
+      ammountType: userConfigs.data.BaseCurrency || {
          "code": "USD",
          "name": "US Dollar",
          "decimal_digits": 2,
@@ -85,8 +88,8 @@ export default function InputTransaction() {
                </FloatLabel>
             </div>
             <div className="flex gap-1">
-                  <CurrencyDropDown loading={context.data.FetchingCurrencies}
-                     options={context.data.ValidCurrencies}
+                  <CurrencyDropDown loading={currencies.busy}
+                     options={currencies.data}
                      onChange={(e) => setNewTransaction({ ...newTransaction, ammountType: e.value })}
                      value={newTransaction.ammountType} />
                
@@ -100,7 +103,7 @@ export default function InputTransaction() {
             </div>
             <div>
                <Calendar id="TransactionDateTime" 
-                  touchUI={context.data.User.IsMobile} showIcon showButtonBar
+                  touchUI={userConfigs.data.IsMobile} showIcon showButtonBar
                   value={ new Date(newTransaction.dateTime)} showTime hourFormat="12"
                   onChange={(e) => setNewTransaction({ ...newTransaction, dateTime: e.value?.getTime() || 0 })}
                />
