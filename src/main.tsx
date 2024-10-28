@@ -10,7 +10,8 @@ import "primeicons/primeicons.css"
 import GlobalDataProvider from './Data/Contexts/GlobalDataContext.tsx'
 import FinacesContextProvider from './Data/Contexts/FinancesContext.tsx'
 import UserContextProvider from './Data/Contexts/UserContext.tsx'
-import ExchangeContextProvider from './Data/Contexts/ExchangeContexts.tsx'
+import ExchangeContextProvider from './Data/Contexts/ExchangeContext.tsx'
+import CurrencyContextProvider from './Data/Contexts/CurrencyContext.tsx'
 //import { AvailableThemes } from './Data/Selections/AvailableThemes.ts'
 
 createRoot(document.getElementById('root')!).render(
@@ -27,13 +28,15 @@ export function App() {
   //
   return (<>
     <UserContextProvider>
-      <ExchangeContextProvider>
-        <FinacesContextProvider>
-          <GlobalDataProvider>
-            <Sidebar />
-          </GlobalDataProvider>
-        </FinacesContextProvider>
-      </ExchangeContextProvider>
+      <CurrencyContextProvider>
+        <ExchangeContextProvider>
+          <FinacesContextProvider>
+            <GlobalDataProvider>
+              <Sidebar />
+            </GlobalDataProvider>
+          </FinacesContextProvider>
+        </ExchangeContextProvider>
+      </CurrencyContextProvider>
     </UserContextProvider>
 
   </>)
