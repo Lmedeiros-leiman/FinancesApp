@@ -24,11 +24,11 @@ export const JsonFetcher = async <T = any>(url: string, cachedTime : number = 1 
       const newHeader = new Headers(header.headers)
       newHeader.append("x-cached-time", String(new Date().getTime() + cachedTime));
 
-      await cache.put(url, new Response(JSON.stringify(data), { headers: newHeader } ));
+      await cache.put(url, new Response(JSON.stringify(data), { headers: newHeader }) );
    }
    
    
-   return <T>data;
+   return data as T;
 }
 
 
