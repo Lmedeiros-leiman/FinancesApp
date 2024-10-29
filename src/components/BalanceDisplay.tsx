@@ -5,6 +5,7 @@ import { Tooltip } from "primereact/tooltip"
 import { FinancesContext, FinancesContextType } from "../Data/Contexts/FinancesContext"
 import { Usercontext, UserContextType } from "../Data/Contexts/UserContext"
 import { ExchangeContext, ExchangeContextType } from "../Data/Contexts/ExchangeContext"
+import { Transaction } from "../Data/Types/Transaction"
 
 
 
@@ -13,48 +14,37 @@ import { ExchangeContext, ExchangeContextType } from "../Data/Contexts/ExchangeC
 export default function BalanceDisplay() {
 
    const finances = useContext(FinancesContext) as FinancesContextType
-   const exchanges = useContext(ExchangeContext) as ExchangeContextType
+   const exchangeRate = useContext(ExchangeContext) as ExchangeContextType
    const userConfigs = useContext(Usercontext) as UserContextType
 
    const [total, setTotal] = useState(0);
    const [showingData, setShowingData] = useState<boolean>(userConfigs.data.Settings.ShowValues);
 
-   useEffect( () => {
-      const dates = Object.keys(finances.data).sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
-      const todayKey = new Date().toDateString()
+   useEffect(() => {
+      // data = {[key: string] : Transaction[] }
+      let total = 0;
+      Object.keys(finances.data)
+      .filter( day => new Date(day).getTime() <= new Date(new Date().toDateString()).getTime())
+      .sort((a, b) => new Date(b).getTime() - new Date(a).getTime())
+      .forEach( (day) => {
+         finances.data[day].forEach( (transaction : Transaction) => {
 
-      let calculatedTotal = 0;
-      for (let i = 0; i < dates.length; i++) { 
-         let currentDateKey = dates[i]
-         
-         //
-         finances.data[currentDateKey].forEach(t => {
-            const rates = exchanges.data
-
-            if (rates) {
-               if (t.ammountType.code === userConfigs.data.BaseCurrency.code) { 
-                  calculatedTotal += t.amount
-               } else {
-                  calculatedTotal += t.amount / rates.rates[t.ammountType.code]
-               }
+            if (transaction.ammountType == userConfigs.data.BaseCurrency) {
+               total += transaction.amount
             } else {
-               calculatedTotal += t.amount
+               if (exchangeRate.data) {
+                  total += transaction.amount / exchangeRate.data.rates[transaction.ammountType.code]
+               }
             }
-            
-            
-         })
+         });
+      });
+      setTotal(total);
 
-         if ( currentDateKey === todayKey) {
-            setTotal(calculatedTotal);
-            break;
-         }
-      }
       
+   },[finances.data, exchangeRate.data, userConfigs.data.BaseCurrency]);
 
-   },[finances,exchanges,userConfigs.data.BaseCurrency]); 
 
-
-   if (finances.busy || exchanges.busy) {
+   if (finances.busy || exchangeRate.busy) {
       return (<>
          <span className="flex gap-1 align-items-center ">
             <Skeleton width="2rem" height="3rem" />
@@ -71,7 +61,7 @@ export default function BalanceDisplay() {
             <span className="p-inputgroup-addon">
                <Tooltip target=".custom-target-icon" />
                <i className="m-0 p-0 custom-target-icon"
-                  data-pr-tooltip={userConfigs.data.BaseCurrency.symbol + " | "+ userConfigs.data.BaseCurrency.symbol_native}
+                  data-pr-tooltip={` ${ userConfigs.data.BaseCurrency.name } (${userConfigs.data.BaseCurrency.symbol}) `} 
                   data-pr-position="bottom"
                   data-pr-at="right+5 bottom"
                   data-pr-my=""
