@@ -1,17 +1,17 @@
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { useContext, useState } from "react";
-import { Transaction } from "../Data/Types/Transaction";
 import { Calendar } from "primereact/calendar";
-import { Database } from "../Data/Database/Database";
 import { InputText } from "primereact/inputtext";
 import { FloatLabel } from "primereact/floatlabel";
 import { InputNumber } from "primereact/inputnumber";
-import "../styles/InputTransaction.css";
-import CurrencyDropDown from "./form/CurrencyDropDown";
-import { FinancesContext, FinancesContextType } from "../Data/Contexts/FinancesContext";
-import { Usercontext, UserContextType } from "../Data/Contexts/UserContext";
-import { CurrencyContext, CurrencyContextType } from "../Data/Contexts/CurrencyContext";
+import "../../styles/InputTransaction.css";
+import { Usercontext, UserContextType } from "../../Data/Contexts/UserContext";
+import { CurrencyContext, CurrencyContextType } from "../../Data/Contexts/CurrencyContext";
+import { FinancesContext, FinancesContextType } from "../../Data/Contexts/FinancesContext";
+import { Transaction } from "../../Data/Types/Transaction";
+import { Database } from "../../Data/Database/Database";
+import CurrencyDropDown from "../form/CurrencyDropDown";
 
 export default function InputTransaction() {
 
