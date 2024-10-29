@@ -72,8 +72,6 @@ export default function BalanceDisplay() {
                <i className={`pi ${!showingData ? "pi pi-eye-slash" : "pi pi-eye"} cursor-pointer `} 
                onClick={() => {
                   showingData ? localStorage.setItem("showValues", "1") : localStorage.removeItem("showValues");
-                  
-                  
                   setShowingData( !showingData )
                   
                   userConfigs.setter( (PrevData) => ({
@@ -83,7 +81,6 @@ export default function BalanceDisplay() {
                         ShowValues: !showingData
                      }
                   }));
-                  
                   
                }} />
             </span>

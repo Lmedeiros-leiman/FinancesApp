@@ -31,10 +31,10 @@ export const UserContextProvider : React.FC<{children: React.ReactNode}> = ({chi
       IsMobile: true,
       BaseCurrency: { "code": "USD", "name": "US Dollar", "decimal_digits": 2, "name_plural": "US dollars", "rounding": 0, "symbol": "$", "symbol_native": "$" },
       Settings : {
-         AutoExchange: localStorage.getItem("AutoExchange") !== null,
-         ResetInputFormOnCancel: localStorage.getItem("ResetInputFormOnCancel") !== null,
-         ShowForms: localStorage.getItem("ShowForms") === null,
-         ShowValues: localStorage.getItem("ShowValues") === null,
+         AutoExchange: localStorage.getItem("AutoExchange") ? false : true,
+         ResetInputFormOnCancel: localStorage.getItem("ResetInputFormOnCancel") ? true : false,
+         ShowForms: localStorage.getItem("ShowForms") ? true : false,
+         ShowValues: localStorage.getItem("ShowValues") ? true : false,
       }
    });
 

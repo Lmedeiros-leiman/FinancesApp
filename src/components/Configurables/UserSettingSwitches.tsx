@@ -22,7 +22,6 @@ const UserSettingSwitches: React.FC = () => {
                            ...prevData.Settings,
                            [key]: e.value
                         }
-
                      }))
                   }}
                />
