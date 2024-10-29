@@ -5,6 +5,7 @@ import InputTransaction from "../TransactionRelated/InputTransaction";
 import { Skeleton } from "primereact/skeleton";
 import TransactionCard from "./TransactionCard";
 import { FinancesContext, FinancesContextType } from "../../Data/Contexts/FinancesContext";
+import { Database } from "../../Data/Database/Database";
 
 
 
@@ -14,25 +15,14 @@ export const TransactionHistory: React.FC = () => {
    const [orderedData, setOrderedData] = useState<Transaction[]>([]);
 
    useEffect(() => {
-      // data = {[key: string] : Transaction[] }
-      let total : Transaction[] = [];
-      const keys = Object.keys(finances.data)
-      //.filter( day => new Date(day).getTime() <= new Date(new Date().toDateString()).getTime())
-      //.sort((a, b) => new Date(b).getTime() - new Date(a).getTime())
-      .forEach( (day) => {
-         console.log(day)
-         if (finances.data[day] != undefined) {
-            finances.data[day].forEach( (transaction : Transaction) => {
-            
-               total.push(transaction);
-            });
-         }
-      });
-      setOrderedData(total)
-
-      
-   },[finances.data])
-
+      const total = Object.entries(finances.data)
+         //.filter( day => new Date(day).getTime() <= new Date(new Date().toDateString()).getTime())
+        .sort(([a], [b]) => new Date(b).getTime() - new Date(a).getTime())
+        .flatMap(([_, transactions]) => transactions);
+    
+      setOrderedData(total);
+    }, [finances.data]);
+    
    if ( finances.busy ) {
       return (<div className="flex justify-content-center">
          <EmptyHistory />
@@ -44,12 +34,29 @@ export const TransactionHistory: React.FC = () => {
       );
    }
 
+   
 
    return (<>
       <div className="flex flex-wrap relative justify-content-center gap-2  w-full">
-         {orderedData.map( transaction => 
-            <TransactionCard key={transaction.createdAt} transaction={transaction} /> 
-         )}
+         {orderedData.map( transaction => {
+            const DeleteTransaction = async () => {
+               const confirmation = confirm("Are you sure you want to delete this transaction?")
+         
+               if (confirmation) {
+                  console.log("Deleting transaction...")
+                  if (await Database.RemoveTransaction(transaction)) {
+                     console.log("Transaction deleted!")
+                     const day = new Date(transaction.dateTime).toDateString()
+                     finances.setter((prevData) => ({
+                        ...prevData,
+                        [day] : [
+                           ...(prevData[day].filter(t => t.createdAt !== transaction.createdAt) || []),]
+                     }))
+                  }
+               }
+            }
+            return (<TransactionCard key={transaction.createdAt} removeAction={DeleteTransaction} transaction={transaction} />)
+         })}
       </div>
    </>);
 }
