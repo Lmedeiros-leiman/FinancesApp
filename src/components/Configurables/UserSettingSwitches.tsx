@@ -1,36 +1,34 @@
 import { useContext } from "react";
-import { GlobalDataContext, GlobalDataContextType } from "../../Data/Contexts/GlobalDataContext";
 import { InputSwitch } from "primereact/inputswitch";
+import { Usercontext, UserContextType } from "../../Data/Contexts/UserContext";
 
 
 
-const UserSettingSwitches : React.FC = () => {
-   const context = (useContext(GlobalDataContext) as GlobalDataContextType)
-   const entries = Object.entries(context.data.User.Settings);
+const UserSettingSwitches: React.FC = () => {
+   const userConfigs = useContext(Usercontext) as UserContextType;
+   const entries = Object.entries(userConfigs.data.Settings);
 
 
-   return(<article>
-     {entries.map(([key, value]) => {
-        return (
-           <div key={key} className="flex gap-1 mb-1 align-items-center">
-               <InputSwitch checked={value} value={key} 
+   return (<article>
+      {entries.map(([key, value]) => {
+         return (
+            <div key={key} className="flex gap-1 mb-1 align-items-center">
+               <InputSwitch checked={value} value={key}
                   onChange={(e) => {
                      e.value ? localStorage.setItem(key, "1") : localStorage.removeItem(key)
-                     context.UpdateData(prevData => ({
+                     userConfigs.setter(prevData => ({
                         ...prevData,
-                        User: {
-                           ...prevData.User,
-                           Settings: {
-                              ...prevData.User.Settings,
-                              [key]: e.value
-                           }
+                        Settings: {
+                           ...prevData.Settings,
+                           [key]: e.value
                         }
+
                      }))
                   }}
                />
-               <span>{ key }</span>
-           </div>);
-     })}
+               <span>{key}</span>
+            </div>);
+      })}
    </article>)
 };
 export default UserSettingSwitches;
