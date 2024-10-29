@@ -25,7 +25,6 @@ body,html {
 }
 
 .hidden-input.p-calendar input.p-inputtext.p-component.p-inputtext.p-component{
-   text-align: end;
    color: var(--text-color-secondary);
 }
 
@@ -38,7 +37,12 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 
+textarea.no-resize {
+   resize: none;
+}
+
 /* Firefox */
 input[type=number] {
   -moz-appearance: textfield;
 };
+
