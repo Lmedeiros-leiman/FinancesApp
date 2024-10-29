@@ -1,6 +1,5 @@
 import { useContext, useState } from "react";
 import { Transaction } from "../../Data/Types/Transaction";
-import { Database } from "../../Data/Database/Database";
 import { Button } from "primereact/button";
 
 import { Calendar } from "primereact/calendar";
@@ -133,7 +132,7 @@ const TransactionCard: React.FC<{ transaction: Transaction, removeAction?: () =>
                onBlur={HandleBlur}
                value={transactionData.category}>
             </textarea>
-            <Button onClick={confirmAction} className="flex-grow-0 " outlined icon="pi pi-trash" severity="danger" />
+            <Button onClick={confirmAction} className="flex-grow-0 " disabled={busy} outlined icon="pi pi-trash" severity="danger" />
                
          </footer>
       </article>

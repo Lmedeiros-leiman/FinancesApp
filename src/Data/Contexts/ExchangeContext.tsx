@@ -34,10 +34,10 @@ const ExchangeContextProvider : React.FC<{children: React.ReactNode}> = ({childr
          let userBase = userSettings.data.BaseCurrency.code;
          // 8 minutes cache.
          const data = await JsonFetcher<MoneyExchangeRateResponse>(`https://api.fxratesapi.com/latest?base=${userBase}`, 60 * 8);
-         if (data.success == false) {
+         if ((data as MoneyExchangeRateResponse).success == false ) {
             setExchangeRates(undefined);
          } else {
-            setExchangeRates(data);
+            setExchangeRates(data as MoneyExchangeRateResponse);
          }
          
          setBusy(false);
