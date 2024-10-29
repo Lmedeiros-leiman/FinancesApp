@@ -31,7 +31,7 @@ const CurrencyContextProvider : React.FC<{ children : React.ReactNode}> = ({chil
    useEffect(() => {
       (async () => {
          let currencies = await JsonFetcher<ApiCurrencies>("https://api.fxratesapi.com/currencies", 60 * 60 * 24 * 30);
-         setCurrencies(currencies);
+         setCurrencies(currencies as ApiCurrencies);
       })()
    },[])
 
