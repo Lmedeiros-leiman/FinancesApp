@@ -1,3 +1,4 @@
+/*
 import { Chart } from "primereact/chart";
 import { useContext, useState } from "react";
 import { GlobalDataContext, GlobalDataContextType } from "../../Data/Contexts/GlobalDataContext";
@@ -82,3 +83,5 @@ const DataRangeGraph : React.FC<DataRangeGraphProps> = (props) => {
    </div>);
 }
 export default DataRangeGraph;
+
+*/

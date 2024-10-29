@@ -1,9 +1,12 @@
+export default function () {
+   return(<></>)
+}
+/*
 import { useContext, useEffect, useState } from "react"
 import { Chart } from "primereact/chart"
 import { Calendar } from "primereact/calendar"
 import { Card } from "primereact/card"
 import { FloatLabel } from "primereact/floatlabel"
-import { GlobalDataContext, GlobalDataContextType } from "../Data/Contexts/GlobalDataContext"
 import { Skeleton } from "primereact/skeleton"
 
 type DataPoint = {
@@ -20,7 +23,7 @@ type DataPoint = {
 
 
 export const MonthlyGraph: React.FC = () => {
-   const context = useContext(GlobalDataContext) as GlobalDataContextType;
+   
 
    const pastDays = new Date();
    pastDays.setDate(pastDays.getDate() - 15)
@@ -129,3 +132,4 @@ export const MonthlyGraph: React.FC = () => {
       </>);
 };
 export default MonthlyGraph;
+*/
