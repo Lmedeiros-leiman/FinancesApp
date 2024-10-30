@@ -55,7 +55,40 @@ export const TransactionHistory: React.FC = () => {
                   }
                }
             }
-            return (<TransactionCard key={transaction.createdAt} removeAction={DeleteTransaction} transaction={transaction} />)
+            const UpdateStoredList = async (updatedTransaction : Transaction) => {
+               const originalData = transaction
+               
+               if (await Database.UpdateTransaction(originalData, updatedTransaction)) {
+                  const originalKey = new Date(originalData.dateTime).toDateString()
+                  const updatedKey = new Date(updatedTransaction.dateTime).toDateString()
+
+                  finances.setter((prevData) => {
+                     const FinalData = {...prevData}
+
+                     // remove the original transaction if the dates are different.
+                     if (originalKey !== updatedKey) {
+                        FinalData[originalKey] = [
+                           ...(prevData[originalKey].filter(t => t.createdAt !== originalData.createdAt) || []),
+                        ]
+                     }
+
+                     // insert/update the updated transaction
+                     FinalData[updatedKey] = [
+                        ...(prevData[updatedKey] || []).filter(t => t.createdAt !== originalData.createdAt), // Prevent duplicates if keys are the same
+                        updatedTransaction,
+                     ];
+                     return FinalData 
+                  });
+
+                  console.log("Transaction updated!")
+               }
+               
+
+
+            }
+
+            return (<TransactionCard transaction={transaction} key={transaction.createdAt}
+                HandleDeletion={DeleteTransaction} HandleBlur={UpdateStoredList}  />)
          })}
       </div>
    </>);
