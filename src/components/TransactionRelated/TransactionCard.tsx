@@ -11,15 +11,21 @@ import { CurrencyContext, CurrencyContextType } from "../../Data/Contexts/Curren
 
 
 
-const TransactionCard: React.FC<{ transaction: Transaction, removeAction?: () => void }> = (props): JSX.Element => {
+const TransactionCard: React.FC<{
+   transaction: Transaction,
+
+   HandleBlur?: (transaction: Transaction) => void,
+
+   HandleDeletion?: () => void,
+
+}> = (props): JSX.Element => {
 
    const userConfigs = useContext(Usercontext) as UserContextType
    const exchangeData = useContext(ExchangeContext) as ExchangeContextType
    const currencies = useContext(CurrencyContext) as CurrencyContextType
 
    const [busy, setBusy] = useState(false);
-   const [originalTransaction] = useState(props.transaction);
-   const [transactionData, setTransactionData] = useState(originalTransaction);
+   const [transactionData, setTransactionData] = useState(props.transaction);
 
 
    const ShowData = userConfigs.data.Settings.ShowValues;
@@ -46,17 +52,13 @@ const TransactionCard: React.FC<{ transaction: Transaction, removeAction?: () =>
 
    const HandleBlur = async () => {
       setBusy(true); //
-
-      //await Database.UpdateTransaction(transactionData, transactionData)
-
-      //const data = await Database.GetTransactions();
-
+      props.HandleBlur && props.HandleBlur(transactionData);
       setBusy(false);
    }
 
-   const confirmAction = async () => {
+   const DeleteTransaction = async () => {
       setBusy(true)
-      props.removeAction && props.removeAction()
+      props.HandleDeletion && props.HandleDeletion()
       setBusy(false)
    }
 
@@ -85,55 +87,55 @@ const TransactionCard: React.FC<{ transaction: Transaction, removeAction?: () =>
                </div>
             </aside>
             <section>
-            <div>
-               {ShowData ? <span className="text-right">
-                  <span className="flex align-items-center">
-                     <NumberInput placeholder="Transaction Ammount"
-                        className={`flex-grow-1 w-8rem hidden-input text-lg p-1 mr-1 text-right ${textColor} ${inputVisibility}`}
-                        value={transactionData.amount}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                           setTransactionData(prevData => ({ ...prevData, amount: parseFloat(e.target.value) }));
-                        }}
-                        onBlur={HandleBlur}
-                     />
-                     <CurrencyDropDown className={`${inputVisibility}`}
-                        loading={exchangeData.busy}
-                        options={currencies.data}
-                        value={transactionData.ammountType}
-                        onChange={(e) => {
+               <div>
+                  {ShowData ? <span className="text-right">
+                     <span className="flex align-items-center">
+                        <NumberInput placeholder="Transaction Ammount"
+                           className={`flex-grow-1 w-8rem hidden-input text-lg p-1 mr-1 text-right ${textColor} ${inputVisibility}`}
+                           value={transactionData.amount}
+                           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                              setTransactionData(prevData => ({ ...prevData, amount: parseFloat(e.target.value) }));
+                           }}
+                           onBlur={HandleBlur}
+                        />
+                        <CurrencyDropDown className={`${inputVisibility}`}
+                           loading={exchangeData.busy}
+                           options={currencies.data}
+                           value={transactionData.ammountType}
+                           onChange={(e) => {
 
-                           setTransactionData(prevData => ({
-                              ...prevData,
-                              ammountType: e.value,
-                           }));
-                        }}
-                        onBlur={HandleBlur} />
+                              setTransactionData(prevData => ({
+                                 ...prevData,
+                                 ammountType: e.value,
+                              }));
+                           }}
+                           onBlur={HandleBlur} />
+                     </span>
+                     <div className="text-sm">
+                        {baseCurrencyEquivalent()}
+                     </div>
                   </span>
-                  <div className="text-sm">
-                     {baseCurrencyEquivalent()}
-                  </div>
-               </span>
-                  : <div className="">
-                     <i className="pi pi-lock text-xl pl-2 pr-1" />
-                     <input className="flex-grow-1 p-2 text-lg hidden-input surface-ground"
-                        placeholder="************" readOnly
-                        value={"************"} />
-                  </div>
-               }
-            </div>
+                     : <div className="">
+                        <i className="pi pi-lock text-xl pl-2 pr-1" />
+                        <input className="flex-grow-1 p-2 text-lg hidden-input surface-ground"
+                           placeholder="************" readOnly
+                           value={"************"} />
+                     </div>
+                  }
+               </div>
 
-         </section>
+            </section>
 
          </aside>
-         
+
          <footer className="flex w-full gap-2 px-1 mb-1">
-            <textarea className=" flex-grow-1 border-none p-1 border-round no-resize surface-100 "  placeholder="Category"
+            <textarea className=" flex-grow-1 border-none p-1 border-round no-resize surface-100 " placeholder="Category"
                onChange={(e) => { setTransactionData(prevData => ({ ...prevData, category: e.target.value })) }}
                onBlur={HandleBlur}
                value={transactionData.category}>
             </textarea>
-            <Button onClick={confirmAction} className="flex-grow-0 " disabled={busy} outlined icon="pi pi-trash" severity="danger" />
-               
+            <Button onClick={DeleteTransaction} className="flex-grow-0 " disabled={busy} outlined icon="pi pi-trash" severity="danger" />
+
          </footer>
       </article>
    </>);
