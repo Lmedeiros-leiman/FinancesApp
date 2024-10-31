@@ -26,10 +26,10 @@ export const FetchLocaleCurrency = async (locale: string) => await JsonFetcher(`
 
 
 export const UserContextProvider : React.FC<{children: React.ReactNode}> = ({children}) => {
-
+   const [busy,setBusy] = useState(true);
    const [userConfigs, setUserConfigs] = useState({
       IsMobile: true,
-      BaseCurrency: { "code": "USD", "name": "US Dollar", "decimal_digits": 2, "name_plural": "US dollars", "rounding": 0, "symbol": "$", "symbol_native": "$" },
+      BaseCurrency: localStorage.getItem("PreferedCurrency") ? JSON.parse(localStorage.getItem("PreferedCurrency") as string) as Currency : { "code": "USD", "name": "US Dollar", "decimal_digits": 2, "name_plural": "US dollars", "rounding": 0, "symbol": "$", "symbol_native": "$" },
       Settings : {
          AutoExchange: localStorage.getItem("AutoExchange") ? false : true,
          ResetInputFormOnCancel: localStorage.getItem("ResetInputFormOnCancel") ? true : false,
@@ -40,6 +40,7 @@ export const UserContextProvider : React.FC<{children: React.ReactNode}> = ({chi
 
    useEffect( () => {
       (async () => {
+         setBusy(true);
          if (
             navigator.userAgent.match(/Windows/i) ||
             navigator.userAgent.match(/Linux/i) ||
@@ -64,44 +65,14 @@ export const UserContextProvider : React.FC<{children: React.ReactNode}> = ({chi
                   }));
             }
 
-         
-
+         setBusy(false)
       })()
    },[])
 
 
 
-   return (<Usercontext.Provider value={ {data: userConfigs, setter: setUserConfigs, busy: false} }>
+   return (<Usercontext.Provider value={ {data: userConfigs, setter: setUserConfigs, busy: busy} }>
       {children}
    </Usercontext.Provider>)
 }
 export default UserContextProvider;
-
-/*
-const PreferedCurrency = localStorage.getItem("PreferedCurrency") ?? null;
-
-      if (PreferedCurrency) {
-         let data = JSON.parse(PreferedCurrency) as Currency;
-         ChangeData((PrevData) => ({
-            ...PrevData,
-            User: {
-               ...PrevData.User,
-               BaseCurrency: data
-            }
-         }));
-      } else {
-         const userLocale = navigator.language || "en-US";
-         let UserCurrencyData = await FetchLocaleCurrency(userLocale);
-         let exchangeRates = await MoneyConversionApi.getLatestRates(( UserCurrencyData as Currency).code);
-
-         ChangeData((PrevData) => ({
-            ...PrevData,
-            Exchange: exchangeRates,
-            FetchingExchangeData: false,
-            User: {
-               ...PrevData.User,
-               BaseCurrency: UserCurrencyData as Currency
-            }
-         }));
-      }
-      */
