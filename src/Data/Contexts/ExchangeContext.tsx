@@ -30,6 +30,7 @@ const ExchangeContextProvider : React.FC<{children: React.ReactNode}> = ({childr
    
    useEffect( ()=> {
       (async () => {
+         if (userSettings.busy) return;
          setBusy(true);
          let userBase = userSettings.data.BaseCurrency.code;
          // 8 minutes cache.
@@ -42,7 +43,7 @@ const ExchangeContextProvider : React.FC<{children: React.ReactNode}> = ({childr
          
          setBusy(false);
       })()
-   },[])
+   },[userSettings.data.BaseCurrency])
 
    return (<ExchangeContext.Provider value={ {data: exchangeRates, setter: setExchangeRates, busy:busy } } >
       {children}
