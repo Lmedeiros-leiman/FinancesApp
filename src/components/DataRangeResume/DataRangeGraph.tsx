@@ -1,3 +1,66 @@
+import { Chart } from "primereact/chart";
+import { useContext, useEffect, useState } from "react";
+import { FinancesContext, FinancesContextType } from "../../Data/Contexts/FinancesContext";
+import { ExchangeContext, ExchangeContextType } from "../../Data/Contexts/ExchangeContext";
+import { CurrencyContext, CurrencyContextType } from "../../Data/Contexts/CurrencyContext";
+
+type DataPoint = {
+   labels: string[]
+   datasets: {
+      label: string;
+      data: number[];
+      fill: boolean;
+      borderColor: string;
+      tension: number;
+      backgroundColor: string | null
+   }[];
+}
+
+export const DataRangeGraph: React.FC<{
+   TimeRange: Date[]
+}> = (props) => {
+   //
+   const finances = useContext(FinancesContext) as FinancesContextType;
+   const exchange = useContext(ExchangeContext) as ExchangeContextType;
+   const currencies = useContext(CurrencyContext) as CurrencyContextType
+   //
+   const [data, setData] = useState<DataPoint | undefined>( undefined );
+
+   useEffect( () => {
+      const startDate = props.TimeRange[0];
+      const endDate = props.TimeRange[1];
+
+      const labels : string[] = []
+
+      function getTotalUntilStartDate(startDate: Date) {
+         //const keys = Object.keys(finances.data);
+         //const startDateKey = startDate.toDateString();
+         
+         return
+      }
+
+      (async () => {
+         
+         
+         console.log((finances.data))
+
+         
+
+      })()
+
+   }, [props.TimeRange])
+
+
+   return (<span className="w-full flex-grow-1">
+      <pre>
+         {JSON.stringify(data, null, 2)}
+      </pre>
+      <Chart options={{maintainAspectRatio: false}} type="line" data={data} />
+   </span>);
+}
+export default DataRangeGraph
+
+
 /*
 import { Chart } from "primereact/chart";
 import { useContext, useState } from "react";
