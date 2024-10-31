@@ -39,7 +39,7 @@ const TransactionCard: React.FC<{
       if (exchangeData.data) {
          if (transactionData.ammountType.code != userConfigs.data.BaseCurrency.code) {
             return (<span className=" surface-200 text-primary-400 border-round-3xl px-1 ">
-               ({userConfigs.data.BaseCurrency.symbol} {transactionData.amount / exchangeData.data.rates[transactionData.ammountType.code]})
+               ({userConfigs.data.BaseCurrency.symbol} {(transactionData.amount / exchangeData.data.rates[transactionData.ammountType.code]).toFixed(userConfigs.data.BaseCurrency.decimal_digits)})
             </span>)
          }
          return (undefined)
