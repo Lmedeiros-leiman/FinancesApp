@@ -1,8 +1,8 @@
 import { Chart } from "primereact/chart";
 import { useContext, useEffect, useState } from "react";
 import { FinancesContext, FinancesContextType } from "../../Data/Contexts/FinancesContext";
-import { ExchangeContext, ExchangeContextType } from "../../Data/Contexts/ExchangeContext";
-import { CurrencyContext, CurrencyContextType } from "../../Data/Contexts/CurrencyContext";
+import { ExchangeContext, ExchangeContextType, MoneyExchangeRateResponse } from "../../Data/Contexts/ExchangeContext";
+import { Usercontext, UserContextType } from "../../Data/Contexts/UserContext";
 
 type DataPoint = {
    labels: string[]
@@ -20,42 +20,75 @@ export const DataRangeGraph: React.FC<{
    TimeRange: Date[]
 }> = (props) => {
    //
+   const userSettings = useContext(Usercontext) as UserContextType;
    const finances = useContext(FinancesContext) as FinancesContextType;
    const exchange = useContext(ExchangeContext) as ExchangeContextType;
-   const currencies = useContext(CurrencyContext) as CurrencyContextType
    //
-   const [data, setData] = useState<DataPoint | undefined>( undefined );
+   const [data, setData] = useState<DataPoint | undefined>(undefined);
 
-   useEffect( () => {
+   useEffect(() => {
+      if (exchange.busy || finances.busy) return;
       const startDate = props.TimeRange[0];
       const endDate = props.TimeRange[1];
 
-      const labels : string[] = []
-
-      function getTotalUntilStartDate(startDate: Date) {
-         //const keys = Object.keys(finances.data);
-         //const startDateKey = startDate.toDateString();
-         
-         return
-      }
-
-      (async () => {
-         
-         
-         console.log((finances.data))
-
-         
-
+      const AmmountUntilStartDate = (() => {
+         return Object.keys(finances.data)
+            .filter(day => new Date(day) < startDate)
+            .reduce((total, day) => {
+               const dayTotal = finances.data[day].reduce((total, transaction) => {
+                  if (!exchange.busy || exchange.data != undefined) {
+                     if (transaction.ammountType.code != userSettings.data.BaseCurrency.code) {
+                        return total + transaction.amount / (exchange.data as MoneyExchangeRateResponse).rates[transaction.ammountType.code];
+                     }
+                  }
+                  return total + transaction.amount;
+               }, 0);
+               return total + dayTotal;
+            }, 0)
       })()
 
-   }, [props.TimeRange])
+      // fetches the data between the start date and the end date
+      // 
+      let rangedAmmount: number = AmmountUntilStartDate || 0;
+      console.log(rangedAmmount)
+      let balancePerDay: number[] = [];
+      let label: string[] = [];
+
+      for (let selectedDay = new Date(startDate); selectedDay <= endDate; selectedDay.setDate(selectedDay.getDate() + 1)) {
+
+         const day = finances.data[selectedDay.toDateString()] || [];
+         const dayTotal = day.reduce((total, transaction) => {
+            if (!exchange.busy || exchange.data != undefined) {
+               if (transaction.ammountType.code != userSettings.data.BaseCurrency.code) {
+                  return total + transaction.amount / (exchange.data as MoneyExchangeRateResponse).rates[transaction.ammountType.code];
+               }
+            }
+            return total + transaction.amount
+         }, 0);
+         //
+         rangedAmmount += dayTotal;
+         balancePerDay.push(rangedAmmount);
+         label.push(selectedDay.toLocaleDateString());
+
+      }
+
+      setData({
+         labels: label,
+         datasets: [{
+            label: "Total",
+            data: balancePerDay,
+            fill: true,
+            borderColor: "green",
+            tension: 0.4,
+            backgroundColor: 'rgba(100,167,38,0.2)'
+         }]
+      })
+
+   }, [props.TimeRange, exchange.busy, finances.busy])
 
 
    return (<span className="w-full flex-grow-1">
-      <pre>
-         {JSON.stringify(data, null, 2)}
-      </pre>
-      <Chart options={{maintainAspectRatio: false}} type="line" data={data} />
+      <Chart options={{ maintainAspectRatio: false }} type="line" data={data} />
    </span>);
 }
 export default DataRangeGraph
