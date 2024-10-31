@@ -57,7 +57,7 @@ export const DataRangeGraph: React.FC<{
                }, 0);
                return total + dayTotal;
             }, 0)
-      })()
+      })();
 
       // fetches the data between the start date and the end date
       // 
