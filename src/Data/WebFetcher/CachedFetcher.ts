@@ -8,13 +8,12 @@ export const JsonFetcher = async <T> (url: string, cachedTime : number = 1 * 100
    if (cachedResponse) {
       const cachedTimeHeader = Number(cachedResponse.headers.get("x-cached-time"));
       const isStale = new Date().getTime() > cachedTimeHeader;
-      console.log("Cache TIme: "+ cachedTimeHeader + "| Current Time: " + new Date().getTime() + "| Stale: " + isStale)
+      
       if (isStale) {
          // Cache is stale; delete it
-         console.log("Deleting cached data for", url);
          await cache.delete(url);
       } else {
-         console.log(`Using cached data for ${url}`);
+         console.log("Fetched CACHED data for " + url)
          return await cachedResponse.json() as T;
          
       }
@@ -22,7 +21,7 @@ export const JsonFetcher = async <T> (url: string, cachedTime : number = 1 * 100
    }
 
    // Fetch new data as cache was missing or stale
-   console.log(`Fetching new data for ${url}`);
+   console.log(` Fetched NEW data for ${url}`);
    const response = await fetch(url);
    
 
@@ -30,7 +29,6 @@ export const JsonFetcher = async <T> (url: string, cachedTime : number = 1 * 100
       const data = await response.json() as T;
       const headers = new Headers(response.headers);
       headers.append("x-cached-time", String(new Date().getTime() + cachedTime * 1000));
-      console.log("Caching data for ", url);
       await cache.put(url, new Response(JSON.stringify(data), { headers }));
 
       return data;
