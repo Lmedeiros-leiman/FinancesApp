@@ -17,23 +17,14 @@ export default function Home() {
 
       <article className="flex flex-wrap justify-content-center px-1">
 
+         <section className=" flex flex-wrap gap-1 flex-grow-1 p-1 w-full surface-ground border-1 border-gray-400 p-1 border-round">
+            <DataRangeResume />
+         </section>
 
          <footer className="text-center flex mb-4 mt-5 flex-column w-full">
             <TransactionHistory />
          </footer>
       </article>
 
-   </main>)
-
-
-   return (<main className="relative w-full">
-
-      
-         <section className=" flex-grow-1 p-1 w-full">
-            <DataRangeResume />
-         </section>
-
-         
-      
    </main>)
 }
