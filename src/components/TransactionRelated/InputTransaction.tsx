@@ -68,7 +68,7 @@ export default function InputTransaction() {
    }
 
    return (<span>
-      <Button className="gap-1 InputTransaction"
+      <Button className="gap-1 InputTransaction py-3"
          onClick={() => setOpen(true)}>
             <i className="pi pi-plus"></i>
          <span>Add Transaction</span>
