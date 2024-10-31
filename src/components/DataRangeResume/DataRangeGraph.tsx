@@ -8,10 +8,10 @@ type DataPoint = {
    labels: string[]
    datasets: {
       label: string;
-      data: number[];
-      fill: boolean;
+      data?: number[];
+      fill?: boolean;
       borderColor: string;
-      tension: number;
+      tension?: number;
       backgroundColor: string | null
    }[];
 }
@@ -27,6 +27,18 @@ export const DataRangeGraph: React.FC<{
    const [data, setData] = useState<DataPoint | undefined>(undefined);
 
    useEffect(() => {
+      if (userSettings.data.Settings.ShowValues == false) {
+         setData({
+            labels: ["", "Not Showing Data", ""],
+            datasets: [{
+               label: "Not Showing Data",
+               borderColor: "transparent",
+               backgroundColor: 'rgba(0,0,0,0)'
+            }]
+         })
+
+         return;
+      }
       if (exchange.busy || finances.busy) return;
       const startDate = props.TimeRange[0];
       const endDate = props.TimeRange[1];
@@ -84,7 +96,7 @@ export const DataRangeGraph: React.FC<{
          }]
       })
 
-   }, [props.TimeRange, exchange.busy, finances.busy])
+   }, [props.TimeRange, exchange.busy, finances.busy, userSettings.data.Settings.ShowValues])
 
 
    return (<span className="w-full flex-grow-1">
