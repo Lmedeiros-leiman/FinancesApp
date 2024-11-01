@@ -115,11 +115,9 @@ const TransactionCard: React.FC<{
                         {baseCurrencyEquivalent()}
                      </div>
                   </span>
-                     : <div className="">
+                     : <div className="flex flex-row-reverse text-right align-items-center ml-1">
                         <i className="pi pi-lock text-xl pl-2 pr-1" />
-                        <input className="flex-grow-1 p-2 text-lg hidden-input surface-ground"
-                           placeholder="************" readOnly
-                           value={"************"} />
+                        <span className="flex-grow-1 font-bold p-2 text-lg surface-ground">************</span>
                      </div>
                   }
                </div>
