@@ -42,17 +42,18 @@ const DataRangeCards: React.FC<{
       for (let currentDate = new Date(startDate); currentDate.getTime() <= endDate.getTime(); currentDate.setDate(currentDate.getDate() + 1)) {
 
          (finances.data[currentDate.toDateString()] || []).forEach(transaction => {
+            let ammount = transaction.amount;
             if (transaction.ammountType.code != userSettings.data.BaseCurrency.code) {
-               transaction.amount = transaction.amount / (exchange.data as MoneyExchangeRateResponse).rates[transaction.ammountType.code];
+               ammount = transaction.amount / (exchange.data as MoneyExchangeRateResponse).rates[transaction.ammountType.code];
 
             }
 
             if (transaction.amount < 0) {
-               expenses += Math.abs(transaction.amount);
+               expenses += Math.abs(ammount);
             } else {
-               income += transaction.amount;
+               income += ammount;
             }
-            total += transaction.amount;
+            total += ammount;
          })
       }
 
@@ -68,24 +69,31 @@ const DataRangeCards: React.FC<{
       <span className="flex-grow-1 bg-red-400 overflow-auto w-full border-round">
 
          <h2 className="flex gap-1 justify-content-center">
-            <span>{(Expenses).toFixed(userSettings.data.BaseCurrency.decimal_digits)}</span>
-            <span className="select-none">{userSettings.data.BaseCurrency.symbol_native}</span>
+            {userSettings.data.Settings.ShowValues ? <>
+               <span>{(Expenses).toFixed(userSettings.data.BaseCurrency.decimal_digits)}</span>
+               <span className="select-none">{userSettings.data.BaseCurrency.symbol_native}</span></>
+               : (<strong>*********</strong>)
+            }
          </h2>
          <strong className="select-none">Expenses</strong>
       </span>
       <span className="flex-grow-1  bg-gray-400 overflow-auto w-full border-round">
 
          <h2 className="flex gap-1 justify-content-center">
+         {userSettings.data.Settings.ShowValues ? <>
             <span>{(Total).toFixed(userSettings.data.BaseCurrency.decimal_digits)}</span>
-            <span className="select-none">{userSettings.data.BaseCurrency.symbol_native}</span>
+            <span className="select-none">{userSettings.data.BaseCurrency.symbol_native}</span> </>
+            : (<strong>*********</strong>)}
          </h2>
          <strong className="select-none">Total</strong>
       </span>
       <span className="flex-grow-1 bg-green-400 overflow-auto w-full border-round">
 
          <h2 className="flex gap-1 justify-content-center">
+         { userSettings.data.Settings.ShowValues ? <>
             <span>{(Income).toFixed(userSettings.data.BaseCurrency.decimal_digits)}</span>
-            <span className="select-none">{userSettings.data.BaseCurrency.symbol_native}</span>
+            <span className="select-none">{userSettings.data.BaseCurrency.symbol_native}</span></>
+            : (<strong>*********</strong>)}
          </h2>
          <strong className="select-none">Income</strong>
       </span>
