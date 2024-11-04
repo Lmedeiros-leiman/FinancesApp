@@ -23,15 +23,16 @@ export const TransactionHistory: React.FC = () => {
       setOrderedData(total);
     }, [finances.data]);
     
-   if ( finances.busy ) {
-      return (<div className="flex justify-content-center">
-         <EmptyHistory />
-      </div>)
-   }
-   if (  !(finances.busy) && Object.entries(finances.data).length == 0  ) {
+   if ( finances.busy == true ) {
       return (
          Array(5).fill(0).map((_, index) => <PlaceholderCard key={index} />)
       );
+   }
+   if (  (finances.busy == false) && Object.entries(finances.data).length == 0  ) {
+      
+      return (<div className="flex justify-content-center">
+         <EmptyHistory />
+      </div>)
    }
 
    
